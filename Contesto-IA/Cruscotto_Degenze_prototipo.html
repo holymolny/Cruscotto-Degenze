@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<title>Cruscotto Degenze — Casa di Cura Misericordia Navacchio</title>
+<style>
+:root{
+  --blu:#0B6FA4; --blu-scuro:#08486B; --blu-chiaro:#E8F3FA; --blu-bordo:#BFDCEC;
+  --giallo:#F5C518; --giallo-chiaro:#FFF8E0; --giallo-scuro:#8A6D00;
+  --fondo:#F4F7F9; --carta:#FFFFFF; --testo:#16212B; --testo-2:#5A6B79;
+  --linea:#DBE4EA; --verde:#1E7A34; --verde-bg:#E7F4EA;
+  --gialloG:#9A7400; --gialloG-bg:#FFF3CD; --rosso:#B3261E; --rosso-bg:#FBE9E7;
+  --grigio:#6E7B86; --grigio-bg:#EDF1F4;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--testo);
+  font-family:"Segoe UI Variable Text","Segoe UI",system-ui,Arial,sans-serif;font-size:15px;line-height:1.45}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+a{color:var(--blu)}
+.nascosto{display:none !important}
+
+/* ---------- LOGIN ---------- */
+#login{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:linear-gradient(0deg,var(--fondo),var(--fondo)),var(--fondo);padding:24px}
+.marchio{text-align:center;margin-bottom:22px}
+.logo{width:74px;height:74px;border-radius:50%;background:var(--blu);color:#fff;margin:0 auto 14px;
+  display:flex;align-items:center;justify-content:center;font-size:27px;font-weight:600;letter-spacing:.5px;
+  border:4px solid var(--giallo)}
+.marchio h1{margin:0;font-size:30px;font-weight:600;color:var(--blu-scuro);letter-spacing:-.3px}
+.marchio p{margin:4px 0 0;color:var(--testo-2);font-size:15px}
+.card-login{background:var(--carta);width:100%;max-width:380px;border:1px solid var(--linea);
+  border-top:4px solid var(--giallo);border-radius:10px;padding:26px}
+.campo{margin-bottom:15px}
+.campo label{display:block;font-size:13.5px;color:var(--testo-2);margin-bottom:5px}
+.campo input,.campo select,.campo textarea{width:100%;padding:9px 11px;border:1px solid #B9C7D2;
+  border-radius:6px;background:#fff;color:#000}
+.campo input:focus,.campo select:focus,.campo textarea:focus{outline:2px solid var(--blu);outline-offset:1px;border-color:var(--blu)}
+.btn{background:var(--blu);color:#fff;border:0;border-radius:6px;padding:10px 16px;font-weight:600}
+.btn:hover{background:var(--blu-scuro)}
+.btn-full{width:100%;padding:11px}
+.btn-2{background:#fff;color:var(--blu-scuro);border:1px solid #B9C7D2;border-radius:6px;padding:8px 13px;font-weight:500}
+.btn-2:hover{background:var(--blu-chiaro)}
+.btn-giallo{background:var(--giallo);color:#3D2F00;border:0;border-radius:6px;padding:8px 13px;font-weight:600}
+.btn-danger{background:#fff;color:var(--rosso);border:1px solid #E3B6B2;border-radius:6px;padding:6px 11px}
+.link-pwd{display:block;text-align:center;margin-top:14px;font-size:13.5px;color:var(--blu)}
+.errore{background:var(--rosso-bg);border:1px solid #E3B6B2;color:var(--rosso);
+  padding:8px 11px;border-radius:6px;font-size:13.5px;margin-bottom:14px}
+.demo{max-width:380px;width:100%;margin-top:18px;background:var(--giallo-chiaro);
+  border:1px solid #EBD9A0;border-radius:8px;padding:13px 15px;font-size:13px;color:#4A3B00}
+.demo b{display:block;margin-bottom:6px}
+.demo code{background:#fff;border:1px solid #E4D28F;border-radius:3px;padding:1px 5px;font-size:12.5px}
+.demo div{margin:3px 0}
+
+/* ---------- APP ---------- */
+#app{display:grid;grid-template-columns:224px 1fr;min-height:100vh}
+aside{background:var(--blu-scuro);color:#DCEAF3;padding:16px 0;display:flex;flex-direction:column}
+.aside-testa{padding:0 16px 15px;border-bottom:1px solid rgba(255,255,255,.15);margin-bottom:12px}
+.aside-testa .n{font-size:17px;font-weight:600;color:#fff}
+.aside-testa .s{font-size:12px;opacity:.75;margin-top:2px}
+nav a{display:flex;align-items:center;gap:9px;padding:10px 16px;color:#CFE2EE;text-decoration:none;font-size:14.5px;border-left:3px solid transparent}
+nav a:hover{background:rgba(255,255,255,.08);color:#fff}
+nav a.att{background:rgba(255,255,255,.12);color:#fff;border-left-color:var(--giallo);font-weight:600}
+nav .pill{margin-left:auto;background:var(--giallo);color:#3D2F00;border-radius:9px;padding:0 7px;font-size:11.5px;font-weight:700}
+.aside-pie{margin-top:auto;padding:14px 16px 0;border-top:1px solid rgba(255,255,255,.15);font-size:12px;opacity:.7}
+main{padding:20px 24px 40px;overflow:auto}
+.testa{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.testa h2{margin:0;font-size:24px;font-weight:600;color:var(--blu-scuro)}
+.testa .sott{color:var(--testo-2);font-size:14px;margin-top:2px}
+.utente{display:flex;align-items:center;gap:10px;font-size:13.5px}
+.avatar{width:34px;height:34px;border-radius:50%;background:var(--blu);color:#fff;display:flex;
+  align-items:center;justify-content:center;font-weight:600;font-size:13px}
+.ruolo-tag{background:var(--blu-chiaro);border:1px solid var(--blu-bordo);color:var(--blu-scuro);
+  border-radius:10px;padding:1px 8px;font-size:11.5px;font-weight:600}
+
+.avviso{background:var(--giallo-chiaro);border-left:4px solid var(--giallo);padding:10px 14px;
+  border-radius:0 6px 6px 0;font-size:13.5px;margin-bottom:16px;color:#4A3B00}
+
+.kpi-riga{display:grid;grid-template-columns:repeat(6,1fr);gap:11px;margin-bottom:20px}
+.kpi{background:var(--carta);border:1px solid var(--linea);border-radius:9px;padding:13px 14px;cursor:pointer}
+.kpi:hover{border-color:var(--blu);background:var(--blu-chiaro)}
+.kpi .v{font-size:28px;font-weight:600;color:var(--blu-scuro);line-height:1.1}
+.kpi .l{font-size:12.5px;color:var(--testo-2);margin-top:3px}
+.kpi.allarme .v{color:var(--rosso)}
+
+.griglia2{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+.pannello{background:var(--carta);border:1px solid var(--linea);border-radius:9px;padding:16px}
+.pannello h3{margin:0 0 12px;font-size:16px;font-weight:600;color:var(--blu-scuro)}
+.riga-avviso{border:1px solid var(--linea);border-left:4px solid var(--giallo);border-radius:0 6px 6px 0;
+  padding:9px 12px;margin-bottom:9px;font-size:13.5px}
+.riga-avviso.rossa{border-left-color:var(--rosso);background:var(--rosso-bg)}
+.riga-avviso b{color:var(--blu-scuro)}
+.riga-avviso .d{color:var(--testo-2);font-size:12.5px;margin-top:2px}
+.barra-reparto{margin-bottom:13px}
+.barra-reparto .t{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:4px}
+.barra{height:19px;background:var(--grigio-bg);border-radius:4px;overflow:hidden}
+.barra span{display:block;height:100%;background:var(--blu)}
+
+.strumenti{background:var(--carta);border:1px solid var(--linea);border-radius:9px;padding:12px;
+  display:flex;gap:9px;align-items:flex-end;flex-wrap:wrap;margin-bottom:14px}
+.strumenti .campo{margin:0}
+.strumenti .campo input,.strumenti .campo select{padding:7px 9px;font-size:14px}
+.strumenti .spinta{margin-left:auto;display:flex;gap:8px;align-items:flex-end}
+
+.tab-wrap{background:var(--carta);border:1px solid var(--linea);border-radius:9px;overflow:auto}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{background:var(--blu-chiaro);color:var(--blu-scuro);text-align:left;font-size:12.5px;font-weight:600;
+  padding:9px 10px;border-bottom:2px solid var(--blu-bordo);white-space:nowrap;position:sticky;top:0}
+td{padding:8px 10px;border-bottom:1px solid #EDF2F5;vertical-align:middle}
+tbody tr:hover td{background:#F7FBFD}
+td.az{white-space:nowrap;text-align:right}
+.vuoto{padding:30px;text-align:center;color:var(--testo-2)}
+
+.tag{display:inline-flex;align-items:center;gap:6px;border-radius:11px;padding:2px 9px;font-size:12.5px;font-weight:600}
+.punto{width:9px;height:9px;border-radius:50%;flex:none}
+.t-verde{background:var(--verde-bg);color:var(--verde)} .t-verde .punto{background:var(--verde)}
+.t-giallo{background:var(--gialloG-bg);color:var(--gialloG)} .t-giallo .punto{background:#E0A800}
+.t-rosso{background:var(--rosso-bg);color:var(--rosso)} .t-rosso .punto{background:var(--rosso)}
+.t-grigio{background:var(--grigio-bg);color:var(--grigio)} .t-grigio .punto{background:var(--grigio)}
+.t-blu{background:var(--blu-chiaro);color:var(--blu-scuro)} .t-blu .punto{background:var(--blu)}
+.conta{font-weight:600;color:var(--blu-scuro)}
+.conta.ok{color:var(--verde)}
+.conta.manca{color:var(--gialloG)}
+
+/* modali */
+.velo{position:fixed;inset:0;background:rgba(10,30,45,.55);display:flex;align-items:flex-start;
+  justify-content:center;padding:28px 16px;overflow:auto;z-index:50}
+.modale{background:var(--carta);border-radius:10px;width:100%;max-width:860px;border-top:4px solid var(--giallo)}
+.modale.stretta{max-width:520px}
+.modale-testa{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;
+  padding:16px 20px;border-bottom:1px solid var(--linea)}
+.modale-testa h3{margin:0;font-size:19px;color:var(--blu-scuro);font-weight:600}
+.modale-testa .s{font-size:13px;color:var(--testo-2);margin-top:2px}
+.chiudi{background:none;border:0;font-size:24px;line-height:1;color:var(--testo-2);padding:0 4px}
+.modale-corpo{padding:18px 20px}
+.modale-pie{padding:14px 20px;border-top:1px solid var(--linea);display:flex;gap:9px;justify-content:flex-end;background:#FAFCFD;border-radius:0 0 10px 10px}
+.form-griglia{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.form-griglia .largo{grid-column:span 3}
+.form-griglia .medio{grid-column:span 2}
+fieldset{border:1px solid var(--linea);border-radius:8px;padding:12px 14px;margin:16px 0 0}
+legend{font-size:13px;font-weight:600;color:var(--blu-scuro);padding:0 6px}
+.check-lista{display:grid;grid-template-columns:1fr 1fr;gap:5px 16px}
+.check-voce{display:flex;gap:8px;align-items:flex-start;padding:4px 6px;border-radius:5px;font-size:13.5px;cursor:pointer}
+.check-voce:hover{background:var(--blu-chiaro)}
+.check-voce input{margin-top:3px;width:15px;height:15px;flex:none;accent-color:var(--blu)}
+.sola-lettura{background:var(--grigio-bg);color:var(--testo-2)}
+.nota-ro{background:var(--grigio-bg);border:1px solid var(--linea);border-radius:6px;padding:9px 12px;
+  font-size:13px;color:var(--testo-2);margin-bottom:14px}
+.esporta{display:grid;grid-template-columns:repeat(2,1fr);gap:11px}
+.esporta-riga{border:1px solid var(--linea);border-radius:8px;padding:13px 15px;display:flex;
+  justify-content:space-between;align-items:center;gap:12px}
+.esporta-riga .n{font-weight:600;color:var(--blu-scuro);font-size:14.5px}
+.esporta-riga .d{font-size:12.5px;color:var(--testo-2);margin-top:1px}
+.toast{position:fixed;bottom:20px;right:20px;background:var(--blu-scuro);color:#fff;padding:11px 17px;
+  border-radius:7px;font-size:14px;z-index:90;box-shadow:0 3px 14px rgba(0,0,0,.2)}
+@media(max-width:1100px){.kpi-riga{grid-template-columns:repeat(3,1fr)}.griglia2{grid-template-columns:1fr}
+  .form-griglia{grid-template-columns:1fr 1fr}.form-griglia .largo,.form-griglia .medio{grid-column:span 2}
+  .check-lista{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<section id="login">
+  <div class="marchio">
+    <div class="logo">CdC</div>
+    <h1>Cruscotto Degenze</h1>
+    <p>Casa di Cura Misericordia Navacchio</p>
+  </div>
+  <div class="card-login">
+    <div id="errLogin" class="errore nascosto"></div>
+    <div class="campo"><label for="u">Nome utente</label><input id="u" autocomplete="off" placeholder="administrator"></div>
+    <div class="campo"><label for="p">Password</label><input id="p" type="password" autocomplete="off"></div>
+    <button class="btn btn-full" onclick="accedi()">Accedi</button>
+    <a href="#" class="link-pwd" onclick="scordata(event)">Hai dimenticato la password?</a>
+  </div>
+  <div class="demo">
+    <b>Utenze del prototipo</b>
+    <div><code>administrator</code> / <code>administrator</code> — amministratore</div>
+    <div><code>m.ferrante</code> / <code>demo</code> — medico</div>
+    <div><code>s.campera</code> / <code>demo</code> — infermiere</div>
+    <div><code>l.bertelli</code> / <code>demo</code> — OSS, sola lettura</div>
+    <div><code>g.pardini</code> / <code>demo</code> — amministrazione</div>
+    <div style="margin-top:7px;opacity:.8">Cambia utente per vedere come i permessi modificano le pagine.</div>
+  </div>
+</section>
+
+<!-- ============ APP ============ -->
+<div id="app" class="nascosto">
+  <aside>
+    <div class="aside-testa">
+      <div class="n">Cruscotto Degenze</div>
+      <div class="s">Misericordia Navacchio</div>
+    </div>
+    <nav id="menu"></nav>
+    <div class="aside-pie">
+      Prototipo — dati non reali<br>
+      <a href="#" style="color:#BFDCEC" onclick="esci(event)">Esci</a>
+    </div>
+  </aside>
+  <main>
+    <div class="testa">
+      <div><h2 id="titolo"></h2><div class="sott" id="sottotitolo"></div></div>
+      <div class="utente">
+        <div style="text-align:right">
+          <div id="nomeUtente" style="font-weight:600"></div>
+          <span class="ruolo-tag" id="ruoloUtente"></span>
+        </div>
+        <div class="avatar" id="avatar"></div>
+      </div>
+    </div>
+    <div id="vista"></div>
+  </main>
+</div>
+
+<div id="modali"></div>
+<div id="toast"></div>
+
+<script>
+/* ======================= DATI DI PROVA ======================= */
+const RUOLI = {MED:'Medico', INF:'Infermiere', OSS:'OSS', IT:'IT', AMM:'Amministrazione', ADMIN:'Amministratore'};
+
+let utenti = [
+  {id:'U0', username:'administrator', pwd:'administrator', nome:'Mihnea', cognome:'Molnar', ruolo:'ADMIN', attivo:true},
+  {id:'U1', username:'m.ferrante',    pwd:'demo', nome:'Marco',   cognome:'Ferrante', ruolo:'MED', attivo:true},
+  {id:'U2', username:'s.campera',     pwd:'demo', nome:'Samuele', cognome:'Campera',  ruolo:'INF', attivo:true},
+  {id:'U3', username:'l.bertelli',    pwd:'demo', nome:'Lucia',   cognome:'Bertelli', ruolo:'OSS', attivo:true},
+  {id:'U4', username:'g.pardini',     pwd:'demo', nome:'Giulia',  cognome:'Pardini',  ruolo:'AMM', attivo:true},
+  {id:'U5', username:'micky',         pwd:'demo', nome:'Micky',   cognome:'Molnar',   ruolo:'IT',  attivo:true}
+];
+
+const REPARTI = {AOUP:24, LowCare1:24, LowCare2:22};
+let letti = [];
+Object.entries(REPARTI).forEach(([rep,n])=>{
+  const pre = rep==='AOUP'?'A':(rep==='LowCare1'?'L1-':'L2-');
+  for(let i=1;i<=n;i++) letti.push({id:letti.length+1, codice:pre+String(i).padStart(2,'0'), reparto:rep, attivo:true});
+});
+
+const VOCI = [
+  {id:1,  cat:'Medica e documentale', d:'Paziente dimissibile'},
+  {id:2,  cat:'Medica e documentale', d:'Esami e referti necessari completati'},
+  {id:3,  cat:'Medica e documentale', d:'Terapia alla dimissione definita'},
+  {id:4,  cat:'Medica e documentale', d:'Prescrizioni e ricette predisposte'},
+  {id:5,  cat:'Medica e documentale', d:'Lettera di dimissione predisposta'},
+  {id:6,  cat:'Medica e documentale', d:'Lettera di dimissione firmata'},
+  {id:7,  cat:'Medica e documentale', d:'Attivazione palliativisti valutata'},
+  {id:8,  cat:'Organizzativa e assistenziale', d:'Catetere: gestione definita'},
+  {id:9,  cat:'Organizzativa e assistenziale', d:'Medicazioni programmate'},
+  {id:10, cat:'Organizzativa e assistenziale', d:'Ausili prescritti'},
+  {id:11, cat:'Organizzativa e assistenziale', d:'Continuità assistenziale attivata'},
+  {id:12, cat:'Organizzativa e assistenziale', d:'Familiari avvisati'},
+  {id:13, cat:'Organizzativa e assistenziale', d:'Data e orario dimissione concordati'},
+  {id:14, cat:'Organizzativa e assistenziale', d:'Farmaci consegnati o prescritti'},
+  {id:15, cat:'Organizzativa e assistenziale', d:'Documentazione pronta per la consegna'},
+  {id:16, cat:'Organizzativa e assistenziale', d:'Effetti personali verificati e consegnati'},
+  {id:17, cat:'Trasporto', d:'Necessità di trasporto valutata'},
+  {id:18, cat:'Trasporto', d:'Trasporto richiesto'},
+  {id:19, cat:'Trasporto', d:'Trasporto confermato'}
+];
+
+const oggi = new Date();
+const gg = n => { const d=new Date(oggi); d.setDate(d.getDate()+n); return d.toISOString().slice(0,10); };
+const OGGI = gg(0);
+
+let pazienti = [
+  {id:'P0', cognome:'Bianchi',  nome:'Anna',     nascita:'1938-04-12', sesso:'F'},
+  {id:'P1', cognome:'Rossi',    nome:'Giovanni', nascita:'1945-11-03', sesso:'M'},
+  {id:'P2', cognome:'Vannucci', nome:'Maria',    nascita:'1932-02-27', sesso:'F'},
+  {id:'P3', cognome:'Lombardi', nome:'Piero',    nascita:'1951-07-19', sesso:'M'},
+  {id:'P4', cognome:'Conti',    nome:'Elena',    nascita:'1943-09-08', sesso:'F'},
+  {id:'P5', cognome:'Gori',     nome:'Renzo',    nascita:'1936-01-22', sesso:'M'},
+  {id:'P6', cognome:'Salvini',  nome:'Carla',    nascita:'1949-05-30', sesso:'F'},
+  {id:'P7', cognome:'Danti',    nome:'Alfredo',  nascita:'1940-12-15', sesso:'M'},
+  {id:'P8', cognome:'Pieri',    nome:'Rosa',     nascita:'1955-03-06', sesso:'F'},
+  {id:'P9', cognome:'Meucci',   nome:'Sergio',   nascita:'1947-08-21', sesso:'M'}
+];
+
+const chk = (...ids) => { const o={}; ids.forEach(i=>o[i]=true); return o; };
+
+let ricoveri = [
+  {id:'R0', paz:'P0', letto:'A03',   proposta:gg(-14), presa:gg(-14), prevista:gg(-12), arrivo:gg(-12), provenienza:'Pronto soccorso', medico:'Ferrante', regime:'SSN', stato:'RICOVERATO', attenzione:'ROSSO',  visto:false, dimPrev:gg(1),  dimEff:null, esito:null, noteOrg:'Ingresso da PS, attesa referti', note:'Familiari da ricontattare', checks:chk(1,2,3)},
+  {id:'R1', paz:'P1', letto:'A07',   proposta:gg(-20), presa:gg(-20), prevista:gg(-18), arrivo:gg(-18), provenienza:'AUSL', medico:'Ferrante', regime:'SSN', stato:'RICOVERATO', attenzione:'VERDE',  visto:true,  dimPrev:OGGI,   dimEff:null, esito:null, noteOrg:'', note:'', checks:chk(1,2,3,4,5,6,7,8,11,12,13,14,15,16,17,18,19)},
+  {id:'R2', paz:'P2', letto:'L1-04', proposta:gg(-9),  presa:gg(-9),  prevista:gg(-8),  arrivo:gg(-8),  provenienza:'Domicilio', medico:'Ferrante', regime:'Solvente', stato:'RICOVERATO', attenzione:'GIALLO', visto:true, dimPrev:OGGI, dimEff:null, esito:null, noteOrg:'', note:'Ausili da ritirare', checks:chk(1,2,3,12)},
+  {id:'R3', paz:'P3', letto:'L1-11', proposta:gg(-6),  presa:gg(-6),  prevista:gg(-5),  arrivo:gg(-5),  provenienza:'Altra struttura', medico:'Ferrante', regime:'SSN', stato:'RICOVERATO', attenzione:'VERDE', visto:true, dimPrev:gg(4), dimEff:null, esito:null, noteOrg:'', note:'', checks:chk(1)},
+  {id:'R4', paz:'P4', letto:'L2-02', proposta:gg(-4),  presa:gg(-4),  prevista:gg(-3),  arrivo:gg(-3),  provenienza:'Pronto soccorso', medico:'Ferrante', regime:'SSN', stato:'RICOVERATO', attenzione:'ROSSO', visto:true, dimPrev:gg(6), dimEff:null, esito:null, noteOrg:'', note:'Monitoraggio ravvicinato', checks:{}},
+  {id:'R5', paz:'P5', letto:'A12',   proposta:gg(-3),  presa:gg(-3),  prevista:gg(-2),  arrivo:gg(-2),  provenienza:'Domicilio', medico:'Ferrante', regime:'SSN', stato:'RICOVERATO', attenzione:'VERDE', visto:false, dimPrev:gg(9), dimEff:null, esito:null, noteOrg:'', note:'', checks:{}},
+  {id:'R6', paz:'P6', letto:'L2-08', proposta:gg(-2),  presa:gg(-2),  prevista:gg(-1),  arrivo:gg(-1),  provenienza:'AUSL', medico:'Ferrante', regime:'Convenzione', stato:'RICOVERATO', attenzione:'GIALLO', visto:false, dimPrev:gg(5), dimEff:null, esito:null, noteOrg:'', note:'', checks:chk(1,2)},
+  {id:'R7', paz:'P7', letto:null,    proposta:gg(-1),  presa:gg(-1),  prevista:gg(1),   arrivo:null,    provenienza:'Pronto soccorso', medico:'', regime:'SSN', stato:'ACCETTATO', attenzione:'NV', visto:false, dimPrev:null, dimEff:null, esito:null, noteOrg:'Documentazione ricevuta, letto da assegnare', note:'', checks:{}},
+  {id:'R8', paz:'P8', letto:null,    proposta:OGGI,    presa:OGGI,    prevista:gg(2),   arrivo:null,    provenienza:'Domicilio', medico:'', regime:'Solvente', stato:'PROPOSTO', attenzione:'NV', visto:false, dimPrev:null, dimEff:null, esito:null, noteOrg:'In attesa documentazione dal medico inviante', note:'', checks:{}},
+  {id:'R9', paz:'P9', letto:'A18',   proposta:gg(-32), presa:gg(-32), prevista:gg(-30), arrivo:gg(-30), provenienza:'AUSL', medico:'Ferrante', regime:'SSN', stato:'DIMESSO', attenzione:'VERDE', visto:true, dimPrev:gg(-8), dimEff:gg(-8), esito:'DOMICILIO', noteOrg:'', note:'Dimissione senza criticità', checks:chk(...VOCI.map(v=>v.id))}
+];
+
+let trasporti = [
+  {id:'T0', ric:'R1', data:OGGI,  ora:'11:00', dest:'Domicilio — Crespina', motivo:'Dimissione', mezzo:'Misericordia Navacchio', stato:'CONFERMATO', note:''},
+  {id:'T1', ric:'R2', data:OGGI,  ora:'15:30', dest:'Domicilio — Cascina',  motivo:'Dimissione', mezzo:'Da assegnare', stato:'RICHIESTO', note:'Serve barella'},
+  {id:'T2', ric:'R0', data:gg(1), ora:'09:00', dest:'AOUP — Radiologia',    motivo:'Esame diagnostico', mezzo:'Da assegnare', stato:'DA_RICHIEDERE', note:''}
+];
+
+let attivita = [
+  {id:1, ric:'R0', d:'Ricontattare la figlia per la data di dimissione', resp:'U2', prio:'Alta',  scad:OGGI,  stato:'aperta'},
+  {id:2, ric:'R2', d:'Ritiro ausili presso magazzino',                    resp:'U2', prio:'Media', scad:OGGI,  stato:'aperta'},
+  {id:3, ric:'R4', d:'Programmare colloquio con i familiari',             resp:'U1', prio:'Alta',  scad:gg(1), stato:'aperta'}
+];
+
+let log = [];
+let seqP = 10, seqR = 10, seqT = 3, seqA = 4, seqU = 6;
+
+/* ======================= STATO ======================= */
+let io = null, pagina = 'oggi';
+let filtri = {testo:'', reparto:'', attenzione:'', visto:'', trasporto:''};
+
+/* ======================= PERMESSI ======================= */
+const PERM = {
+  scrive:   ['MED','INF','ADMIN'],
+  accetta:  ['MED','INF','ADMIN'],
+  trasporti:['MED','INF','ADMIN'],
+  esporta:  ['MED','INF','IT','AMM','ADMIN'],
+  utenti:   ['ADMIN'],
+  logv:     ['IT','ADMIN']
+};
+const puo = a => io && PERM[a].includes(io.ruolo);
+
+/* ======================= UTILITÀ ======================= */
+const $ = id => document.getElementById(id);
+const esc = s => String(s==null?'':s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const paz = id => pazienti.find(p=>p.id===id);
+const ric = id => ricoveri.find(r=>r.id===id);
+const nomeCompleto = r => { const p=paz(r.paz); return p ? p.cognome+' '+p.nome : '—'; };
+const eta = d => { if(!d) return '—'; const n=new Date(d), t=new Date(); let e=t.getFullYear()-n.getFullYear();
+  const m=t.getMonth()-n.getMonth(); if(m<0||(m===0&&t.getDate()<n.getDate())) e--; return e; };
+const dataIt = d => d ? d.slice(8,10)+'/'+d.slice(5,7)+'/'+d.slice(0,4) : '—';
+const attivi = () => ricoveri.filter(r=>!r.dimEff);
+const inAgenda = () => attivi().filter(r=>['ARRIVATO','RICOVERATO'].includes(r.stato));
+const fatti = r => VOCI.filter(v=>r.checks && r.checks[v.id]).length;
+const repartoDi = c => { const l=letti.find(x=>x.codice===c); return l?l.reparto:'—'; };
+const trasportoDi = r => { const t=trasporti.filter(x=>x.ric===r.id).sort((a,b)=>(a.data+a.ora)<(b.data+b.ora)?1:-1)[0];
+  return t ? t.stato : 'NESSUNO'; };
+
+const TAG_ATT = {ROSSO:['t-rosso','Rosso'], GIALLO:['t-giallo','Giallo'], VERDE:['t-verde','Verde'], NV:['t-grigio','Non valutato']};
+const tagAtt = a => { const [c,l]=TAG_ATT[a]||TAG_ATT.NV; return `<span class="tag ${c}"><span class="punto"></span>${l}</span>`; };
+const ETICH_TR = {NESSUNO:'Nessuno', DA_RICHIEDERE:'Da richiedere', RICHIESTO:'Richiesto', CONFERMATO:'Confermato', EFFETTUATO:'Effettuato', ANNULLATO:'Annullato'};
+const tagTr = s => { const c = s==='CONFERMATO'||s==='EFFETTUATO' ? 't-verde' : (s==='DA_RICHIEDERE' ? 't-giallo' : (s==='RICHIESTO' ? 't-blu' : 't-grigio'));
+  return `<span class="tag ${c}"><span class="punto"></span>${ETICH_TR[s]||s}</span>`; };
+const ETICH_ST = {PROPOSTO:'Proposto', ACCETTATO:'Accettato', PROGRAMMATO:'Programmato', ARRIVATO:'Arrivato', RICOVERATO:'Ricoverato', DIMESSO:'Dimesso', ANNULLATO:'Annullato'};
+
+function toast(t){ $('toast').innerHTML = `<div class="toast">${esc(t)}</div>`; setTimeout(()=>$('toast').innerHTML='', 2600); }
+function traccia(azione, entita, rec, dettaglio){
+  log.unshift({id:log.length+1, ora:new Date().toLocaleString('it-IT'), utente:io?io.username:'—', azione, entita, rec, dettaglio:dettaglio||''});
+}
+function chiudiModale(){ $('modali').innerHTML=''; }
+
+/* ======================= LOGIN ======================= */
+function accedi(){
+  const u = $('u').value.trim().toLowerCase(), p = $('p').value;
+  const err = $('errLogin');
+  if(!u || !p){ err.textContent='Inserisci nome utente e password.'; err.classList.remove('nascosto'); return; }
+  const trovato = utenti.find(x=>x.username.toLowerCase()===u && x.pwd===p && x.attivo);
+  if(!trovato){ err.textContent='Credenziali non valide.'; err.classList.remove('nascosto');
+    traccia('LOGIN_FALLITO','utenti',u,''); return; }
+  err.classList.add('nascosto'); $('p').value='';
+  io = trovato; traccia('LOGIN','utenti',io.id,'');
+  $('login').classList.add('nascosto'); $('app').classList.remove('nascosto');
+  pagina='oggi'; disegna();
+}
+$('p').addEventListener('keydown', e => { if(e.key==='Enter') accedi(); });
+$('u').addEventListener('keydown', e => { if(e.key==='Enter') $('p').focus(); });
+
+function scordata(e){
+  e.preventDefault();
+  $('modali').innerHTML = `<div class="velo" onclick="if(event.target===this)chiudiModale()"><div class="modale stretta">
+    <div class="modale-testa"><div><h3>Recupero credenziali</h3></div>
+      <button class="chiudi" onclick="chiudiModale()">&times;</button></div>
+    <div class="modale-corpo"><p style="margin:0">Le password non sono recuperabili: nel database sono conservate solo in forma cifrata.</p>
+      <p style="margin:10px 0 0">Contatta l'amministratore di sistema all'interno <b>[interno]</b> oppure scrivi a
+      <b>[indirizzo email IT]</b> per ricevere una password provvisoria.</p></div>
+    <div class="modale-pie"><button class="btn" onclick="chiudiModale()">Ho capito</button></div></div></div>`;
+}
+function esci(e){ if(e) e.preventDefault(); traccia('LOGOUT','utenti',io?io.id:'','');
+  io=null; $('app').classList.add('nascosto'); $('login').classList.remove('nascosto'); $('u').value=''; }
+
+/* ======================= LAYOUT ======================= */
+const PAGINE = [
+  {k:'oggi',      t:'Situazione Oggi',    s:'Situazione del reparto in tempo reale'},
+  {k:'ricoveri',  t:'Gestione Ricoveri',  s:'Accettazione e programmazione degli ingressi'},
+  {k:'agenda',    t:'Agenda Pazienti',    s:'Pazienti presenti in struttura'},
+  {k:'storico',   t:'Storico Pazienti',   s:'Ricoveri conclusi'},
+  {k:'trasporti', t:'Gestione Trasporti', s:'Organizzazione degli spostamenti'},
+  {k:'dati',      t:'Dati',               s:'Esportazione delle tabelle'},
+  {k:'utenti',    t:'Gestione Utenti',    s:'Account, permessi, checklist e letti'}
+];
+
+function disegna(){
+  const daFare = attivi().filter(r=>r.stato==='PROPOSTO'||r.stato==='ACCETTATO').length;
+  const trDa = trasporti.filter(t=>t.stato==='DA_RICHIEDERE').length;
+  $('menu').innerHTML = PAGINE.filter(p=>p.k!=='utenti' || puo('utenti'))
+    .filter(p=>p.k!=='dati' || puo('esporta'))
+    .map(p=>{
+      let pill='';
+      if(p.k==='ricoveri'&&daFare) pill=`<span class="pill">${daFare}</span>`;
+      if(p.k==='trasporti'&&trDa)  pill=`<span class="pill">${trDa}</span>`;
+      return `<a href="#" class="${p.k===pagina?'att':''}" onclick="vai(event,'${p.k}')">${p.t}${pill}</a>`;
+    }).join('');
+  const p = PAGINE.find(x=>x.k===pagina);
+  $('titolo').textContent = p.t; $('sottotitolo').textContent = p.s;
+  $('nomeUtente').textContent = io.nome+' '+io.cognome;
+  $('ruoloUtente').textContent = RUOLI[io.ruolo];
+  $('avatar').textContent = (io.nome[0]+io.cognome[0]).toUpperCase();
+  ({oggi:vOggi, ricoveri:vRicoveri, agenda:vAgenda, storico:vStorico,
+    trasporti:vTrasporti, dati:vDati, utenti:vUtenti})[pagina]();
+}
+function vai(e,k){ e.preventDefault(); pagina=k; disegna(); }
+
+const bannerRuolo = () => puo('scrive') ? '' :
+  `<div class="avviso">Il tuo ruolo (${RUOLI[io.ruolo]}) consente la sola consultazione${puo('esporta')?' e l\'esportazione dei dati':''}. I comandi di modifica non sono disponibili.</div>`;
+
+/* ======================= OGGI ======================= */
+function vOggi(){
+  const a = inAgenda();
+  const rossi = a.filter(r=>r.attenzione==='ROSSO').length;
+  const nonVisti = a.filter(r=>!r.visto).length;
+  const dimOggi = a.filter(r=>r.dimPrev===OGGI);
+  const dimIncomplete = dimOggi.filter(r=>fatti(r)<VOCI.length).length;
+  const trOggi = trasporti.filter(t=>t.data===OGGI).length;
+  const ingressi = attivi().filter(r=>r.prevista===OGGI && !r.arrivo).length;
+  const occupati = a.filter(r=>r.letto).length;
+
+  const avvisi = [];
+  a.forEach(r=>{
+    if(r.attenzione==='ROSSO')
+      avvisi.push(`<div class="riga-avviso rossa"><b>Letto ${esc(r.letto||'—')} — ${esc(nomeCompleto(r))}</b>
+        <div class="d">Attenzione alta. ${r.visto?'Preso in carico dal medico.':'Non ancora preso in carico dal medico.'}</div></div>`);
+    if(r.dimPrev===OGGI && fatti(r)<VOCI.length)
+      avvisi.push(`<div class="riga-avviso"><b>Letto ${esc(r.letto||'—')} — ${esc(nomeCompleto(r))}</b>
+        <div class="d">Dimissione prevista oggi: ${VOCI.length-fatti(r)} voci di checklist ancora da completare.</div></div>`);
+  });
+  attivita.filter(x=>x.stato==='aperta'&&x.scad<=OGGI).forEach(x=>{
+    const r = ric(x.ric);
+    avvisi.push(`<div class="riga-avviso"><b>${esc(x.d)}</b>
+      <div class="d">${esc(nomeCompleto(r))} — letto ${esc(r.letto||'—')} — scadenza ${dataIt(x.scad)} — priorità ${esc(x.prio)}</div></div>`);
+  });
+
+  const barre = Object.entries(REPARTI).map(([rep,tot])=>{
+    const occ = a.filter(r=>r.letto && repartoDi(r.letto)===rep).length;
+    return `<div class="barra-reparto"><div class="t"><span>${rep}</span>
+      <span style="color:var(--testo-2)">${occ} occupati su ${tot}</span></div>
+      <div class="barra"><span style="width:${Math.round(occ/tot*100)}%"></span></div></div>`;
+  }).join('');
+
+  $('vista').innerHTML = `
+    <div class="avviso">Questo strumento coordina il percorso organizzativo del ricovero. Non sostituisce la cartella clinica:
+      diagnosi, diario clinico e dati assistenziali di dettaglio restano in ResMedica.</div>
+    <div class="kpi-riga">
+      <div class="kpi" onclick="vaiFiltro('','')"><div class="v">${occupati}</div><div class="l">Pazienti presenti</div></div>
+      <div class="kpi" onclick="vaiFiltro('','')"><div class="v">${70-occupati}</div><div class="l">Letti liberi</div></div>
+      <div class="kpi ${rossi?'allarme':''}" onclick="vaiFiltro('attenzione','ROSSO')"><div class="v">${rossi}</div><div class="l">Attenzione alta</div></div>
+      <div class="kpi" onclick="vaiFiltro('','')"><div class="v">${dimOggi.length}</div><div class="l">Dimissioni oggi</div></div>
+      <div class="kpi ${dimIncomplete?'allarme':''}" onclick="vaiFiltro('','')"><div class="v">${dimIncomplete}</div><div class="l">Dimissioni da preparare</div></div>
+      <div class="kpi" onclick="vaiFiltro('visto','no')"><div class="v">${nonVisti}</div><div class="l">Non presi in carico</div></div>
+    </div>
+    <div class="griglia2">
+      <div class="pannello"><h3>Richiede attenzione</h3>
+        ${avvisi.join('') || '<div class="vuoto">Nessuna criticità aperta.</div>'}</div>
+      <div>
+        <div class="pannello" style="margin-bottom:16px"><h3>Occupazione per reparto</h3>${barre}</div>
+        <div class="pannello"><h3>In arrivo e in uscita</h3>
+          <div style="font-size:14px">
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--linea)">
+              <span>Ingressi previsti oggi</span><b>${ingressi}</b></div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--linea)">
+              <span>Trasporti programmati oggi</span><b>${trOggi}</b></div>
+            <div style="display:flex;justify-content:space-between;padding:6px 0">
+              <span>Proposte da lavorare</span><b>${attivi().filter(r=>r.stato==='PROPOSTO'||r.stato==='ACCETTATO').length}</b></div>
+          </div></div>
+      </div>
+    </div>`;
+}
+function vaiFiltro(k,v){ filtri={testo:'',reparto:'',attenzione:'',visto:'',trasporto:''}; if(k) filtri[k]=v; pagina='agenda'; disegna(); }
+
+/* ======================= AGENDA ======================= */
+function vAgenda(){
+  let righe = inAgenda();
+  const f = filtri;
+  if(f.testo){ const q=f.testo.toLowerCase();
+    righe = righe.filter(r=>(nomeCompleto(r)+' '+(r.letto||'')).toLowerCase().includes(q)); }
+  if(f.reparto)    righe = righe.filter(r=>repartoDi(r.letto)===f.reparto);
+  if(f.attenzione) righe = righe.filter(r=>r.attenzione===f.attenzione);
+  if(f.visto)      righe = righe.filter(r=>String(!!r.visto)===String(f.visto==='si'));
+  if(f.trasporto)  righe = righe.filter(r=>trasportoDi(r)===f.trasporto);
+  righe.sort((a,b)=>{ const o={ROSSO:0,GIALLO:1,VERDE:2,NV:3};
+    return o[a.attenzione]-o[b.attenzione] || (a.letto||'zz').localeCompare(b.letto||'zz'); });
+
+  $('vista').innerHTML = bannerRuolo() + `
+  <div class="strumenti">
+    <div class="campo" style="min-width:190px"><label>Paziente o letto</label>
+      <input value="${esc(f.testo)}" oninput="setF('testo',this.value)" placeholder="Cognome, nome o letto"></div>
+    <div class="campo"><label>Reparto</label><select onchange="setF('reparto',this.value)">
+      <option value="">Tutti</option>${Object.keys(REPARTI).map(r=>`<option ${f.reparto===r?'selected':''}>${r}</option>`).join('')}</select></div>
+    <div class="campo"><label>Attenzione</label><select onchange="setF('attenzione',this.value)">
+      <option value="">Tutte</option>
+      <option value="ROSSO"  ${f.attenzione==='ROSSO'?'selected':''}>Rosso</option>
+      <option value="GIALLO" ${f.attenzione==='GIALLO'?'selected':''}>Giallo</option>
+      <option value="VERDE"  ${f.attenzione==='VERDE'?'selected':''}>Verde</option>
+      <option value="NV"     ${f.attenzione==='NV'?'selected':''}>Non valutato</option></select></div>
+    <div class="campo"><label>Preso in carico</label><select onchange="setF('visto',this.value)">
+      <option value="">Tutti</option><option value="si" ${f.visto==='si'?'selected':''}>Sì</option>
+      <option value="no" ${f.visto==='no'?'selected':''}>No</option></select></div>
+    <div class="campo"><label>Trasporto</label><select onchange="setF('trasporto',this.value)">
+      <option value="">Tutti</option>${Object.entries(ETICH_TR).map(([k,v])=>`<option value="${k}" ${f.trasporto===k?'selected':''}>${v}</option>`).join('')}</select></div>
+    <div class="spinta">
+      <button class="btn-2" onclick="azzeraF()">Azzera filtri</button>
+      ${puo('accetta')?`<button class="btn" onclick="formRicovero()">Nuova proposta</button>`:''}
+    </div>
+  </div>
+  <div class="tab-wrap"><table>
+    <thead><tr><th>Arrivo</th><th>Letto</th><th>Reparto</th><th>Paziente</th><th>Età</th>
+      <th>Attenzione</th><th>Preso in carico</th><th>Dimissione prevista</th><th>Checklist</th>
+      <th>Trasporto</th><th>Note</th><th></th></tr></thead>
+    <tbody>${righe.map(rigaAgenda).join('') || `<tr><td colspan="12" class="vuoto">Nessun paziente corrisponde ai filtri.</td></tr>`}</tbody>
+  </table></div>
+  <p style="color:var(--testo-2);font-size:13px;margin-top:10px">${righe.length} pazienti su ${inAgenda().length} presenti.</p>`;
+}
+function rigaAgenda(r){
+  const n = fatti(r), tot = VOCI.length;
+  const cls = n===tot ? 'ok' : (r.dimPrev===OGGI ? 'manca' : '');
+  return `<tr>
+    <td>${dataIt(r.arrivo)}</td>
+    <td><b>${esc(r.letto||'—')}</b></td>
+    <td style="color:var(--testo-2);font-size:13px">${esc(repartoDi(r.letto))}</td>
+    <td><b>${esc(nomeCompleto(r))}</b></td>
+    <td>${eta(paz(r.paz).nascita)}</td>
+    <td>${tagAtt(r.attenzione)}</td>
+    <td>${r.visto?'<span class="tag t-verde"><span class="punto"></span>Sì</span>':'<span class="tag t-grigio"><span class="punto"></span>No</span>'}</td>
+    <td>${r.dimPrev===OGGI?'<b style="color:var(--gialloG)">oggi</b>':dataIt(r.dimPrev)}</td>
+    <td><span class="conta ${cls}">${n}/${tot}</span></td>
+    <td>${tagTr(trasportoDi(r))}</td>
+    <td style="max-width:170px;font-size:13px;color:var(--testo-2)">${esc(r.note||'')}</td>
+    <td class="az">
+      <button class="btn-2" onclick="schedaPaziente('${r.id}')">${puo('scrive')?'Apri':'Consulta'}</button>
+      ${puo('scrive')?`<button class="btn-danger" onclick="formDimissione('${r.id}')">Dimetti</button>`:''}
+    </td></tr>`;
+}
+function setF(k,v){ filtri[k]=v; vAgenda(); }
+function azzeraF(){ filtri={testo:'',reparto:'',attenzione:'',visto:'',trasporto:''}; vAgenda(); }
+
+/* ---------- scheda paziente ---------- */
+function schedaPaziente(id){
+  const r = ric(id), p = paz(r.paz), ro = !puo('scrive');
+  const cats = [...new Set(VOCI.map(v=>v.cat))];
+  const check = cats.map(c=>`<fieldset><legend>${esc(c)}</legend><div class="check-lista">
+    ${VOCI.filter(v=>v.cat===c).map(v=>`<label class="check-voce">
+      <input type="checkbox" data-v="${v.id}" ${r.checks&&r.checks[v.id]?'checked':''} ${ro?'disabled':''}>
+      <span>${esc(v.d)}</span></label>`).join('')}</div></fieldset>`).join('');
+  const att = attivita.filter(a=>a.ric===id);
+  const opzLetti = letti.filter(l=>l.attivo && (!attivi().some(x=>x.letto===l.codice && x.id!==id)))
+    .map(l=>`<option value="${l.codice}" ${r.letto===l.codice?'selected':''}>${l.codice} — ${l.reparto}</option>`).join('');
+
+  $('modali').innerHTML = `<div class="velo" onclick="if(event.target===this)chiudiModale()"><div class="modale">
+    <div class="modale-testa">
+      <div><h3>${esc(p.cognome)} ${esc(p.nome)}</h3>
+        <div class="s">${r.id} · paziente ${p.id} · ${eta(p.nascita)} anni · nato il ${dataIt(p.nascita)} · stato: ${ETICH_ST[r.stato]}</div></div>
+      <button class="chiudi" onclick="chiudiModale()">&times;</button></div>
+    <div class="modale-corpo">
+      ${ro?`<div class="nota-ro">Sei collegato come ${RUOLI[io.ruolo]}: puoi consultare la scheda ma non modificarla.</div>`:''}
+      <div class="form-griglia">
+        <div class="campo"><label>Letto</label><select id="fLetto" ${ro?'disabled':''}>
+          <option value="">Non assegnato</option>${opzLetti}</select></div>
+        <div class="campo"><label>Data arrivo effettivo</label><input type="date" id="fArrivo" value="${r.arrivo||''}" ${ro?'disabled':''}></div>
+        <div class="campo"><label>Stato del ricovero</label><select id="fStato" ${ro?'disabled':''}>
+          ${['PROPOSTO','ACCETTATO','PROGRAMMATO','ARRIVATO','RICOVERATO'].map(s=>`<option value="${s}" ${r.stato===s?'selected':''}>${ETICH_ST[s]}</option>`).join('')}</select></div>
+        <div class="campo"><label>Provenienza</label><select id="fProv" ${ro?'disabled':''}>
+          ${['Pronto soccorso','Domicilio','AUSL','Altra struttura','Altro'].map(s=>`<option ${r.provenienza===s?'selected':''}>${s}</option>`).join('')}</select></div>
+        <div class="campo"><label>Medico referente</label><input id="fMedico" value="${esc(r.medico)}" ${ro?'disabled':''}></div>
+        <div class="campo"><label>Regime / convenzione</label><select id="fRegime" ${ro?'disabled':''}>
+          ${['SSN','Convenzione','Solvente','Altro'].map(s=>`<option ${r.regime===s?'selected':''}>${s}</option>`).join('')}</select></div>
+        <div class="campo"><label>Livello di attenzione organizzativa</label><select id="fAtt" ${ro?'disabled':''}>
+          ${Object.entries(TAG_ATT).map(([k,v])=>`<option value="${k}" ${r.attenzione===k?'selected':''}>${v[1]}</option>`).join('')}</select></div>
+        <div class="campo"><label>Preso in carico dal medico</label><select id="fVisto" ${ro?'disabled':''}>
+          <option value="false" ${!r.visto?'selected':''}>No</option><option value="true" ${r.visto?'selected':''}>Sì</option></select></div>
+        <div class="campo"><label>Dimissione prevista</label><input type="date" id="fDimPrev" value="${r.dimPrev||''}" ${ro?'disabled':''}></div>
+        <div class="campo largo"><label>Note di reparto</label><textarea id="fNote" rows="2" ${ro?'disabled':''}>${esc(r.note)}</textarea></div>
+      </div>
+      <fieldset><legend>Attività aperte</legend>
+        ${att.length?att.map(a=>`<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--linea);font-size:13.5px">
+          <span>${esc(a.d)}</span>
+          <span style="color:var(--testo-2);white-space:nowrap">${esc(a.prio)} · ${dataIt(a.scad)}</span></div>`).join('')
+          :'<div style="color:var(--testo-2);font-size:13.5px">Nessuna attività aperta.</div>'}
+      </fieldset>
+      <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
+        <b style="color:var(--blu-scuro)">Checklist di dimissione</b>
+        <span style="color:var(--testo-2);font-size:13px">${fatti(r)} voci completate su ${VOCI.length}</span>
+      </div>
+      ${check}
+    </div>
+    <div class="modale-pie">
+      <button class="btn-2" onclick="chiudiModale()">${ro?'Chiudi':'Annulla'}</button>
+      ${ro?'':`<button class="btn" onclick="salvaScheda('${r.id}')">Salva modifiche</button>`}
+    </div></div></div>`;
+}
+function salvaScheda(id){
+  const r = ric(id);
+  const nuovoLetto = $('fLetto').value || null;
+  if(nuovoLetto && attivi().some(x=>x.letto===nuovoLetto && x.id!==id)){ toast('Letto già occupato da un altro ricovero.'); return; }
+  const stato = $('fStato').value, arrivo = $('fArrivo').value || null;
+  if(['ARRIVATO','RICOVERATO'].includes(stato) && !nuovoLetto){ toast('Assegna un letto prima di impostare lo stato ad arrivato.'); return; }
+  if(['ARRIVATO','RICOVERATO'].includes(stato) && !arrivo){ toast('Indica la data di arrivo effettivo.'); return; }
+  r.letto=nuovoLetto; r.arrivo=arrivo; r.stato=stato; r.provenienza=$('fProv').value;
+  r.medico=$('fMedico').value; r.regime=$('fRegime').value; r.attenzione=$('fAtt').value;
+  r.visto = $('fVisto').value==='true'; r.dimPrev=$('fDimPrev').value||null; r.note=$('fNote').value;
+  r.checks = {};
+  document.querySelectorAll('[data-v]').forEach(c=>{ if(c.checked) r.checks[c.dataset.v]=true; });
+  traccia('MODIFICA','ricoveri',r.id,nomeCompleto(r));
+  chiudiModale(); disegna(); toast('Scheda salvata.');
+}
+
+/* ---------- dimissione ---------- */
+function formDimissione(id){
+  const r = ric(id), manca = VOCI.length - fatti(r);
+  const mancanti = VOCI.filter(v=>!(r.checks&&r.checks[v.id]));
+  $('modali').innerHTML = `<div class="velo" onclick="if(event.target===this)chiudiModale()"><div class="modale stretta">
+    <div class="modale-testa"><div><h3>Dimissione</h3>
+      <div class="s">${esc(nomeCompleto(r))} — letto ${esc(r.letto||'—')}</div></div>
+      <button class="chiudi" onclick="chiudiModale()">&times;</button></div>
+    <div class="modale-corpo">
+      ${manca?`<div class="avviso"><b>${manca} voci di checklist non completate.</b>
+        <div style="margin-top:6px;font-size:13px">${mancanti.slice(0,5).map(v=>esc(v.d)).join(' · ')}${mancanti.length>5?' · …':''}</div>
+        <div style="margin-top:6px">Puoi procedere ugualmente, ma la dimissione resterà registrata come incompleta.</div></div>`:''}
+      <div class="campo"><label>Data di dimissione effettiva</label><input type="date" id="dData" value="${OGGI}"></div>
+      <div class="campo"><label>Esito</label><select id="dEsito">
+        <option value="DOMICILIO">Rientro al domicilio</option>
+        <option value="TRASFERIMENTO">Trasferimento ad altra struttura</option>
+        <option value="DECESSO">Decesso</option>
+        <option value="ALTRO">Altro</option></select></div>
+      <div class="campo"><label>Note di chiusura</label><textarea id="dNote" rows="2"></textarea></div>
+      <p style="font-size:13px;color:var(--testo-2);margin:0">Il ricovero esce dall'agenda ma resta consultabile nello storico e nelle esportazioni. Nessun dato viene cancellato.</p>
+    </div>
+    <div class="modale-pie"><button class="btn-2" onclick="chiudiModale()">Annulla</button>
+      <button class="btn" onclick="confermaDimissione('${r.id}')">Conferma dimissione</button></div></div></div>`;
+}
+function confermaDimissione(id){
+  const r = ric(id), d = $('dData').value;
+  if(!d){ toast('Indica la data di dimissione.'); return; }
+  if(r.arrivo && d < r.arrivo){ toast('La dimissione non può precedere la data di arrivo.'); return; }
+  r.dimEff = d; r.esito = $('dEsito').value; r.stato = 'DIMESSO';
+  const n = $('dNote').value; if(n) r.note = (r.note?r.note+' — ':'')+n;
+  traccia('DIMISSIONE','ricoveri',r.id,nomeCompleto(r)+' — '+r.esito);
+  chiudiModale(); disegna(); toast('Ricovero chiuso e spostato nello storico.');
+}
+
+/* ======================= RICOVERI ======================= */
+function vRicoveri(){
+  const righe = attivi().filter(r=>['PROPOSTO','ACCETTATO','PROGRAMMATO'].includes(r.stato))
+    .sort((a,b)=>(a.prevista||'').localeCompare(b.prevista||''));
+  $('vista').innerHTML = bannerRuolo() + `
+  <div class="strumenti"><div style="color:var(--testo-2);font-size:13.5px">
+    Le proposte accettate generano il paziente e il ricovero, che compaiono in agenda al momento dell'arrivo.</div>
+    <div class="spinta">${puo('accetta')?`<button class="btn" onclick="formRicovero()">Nuova proposta</button>`:''}</div></div>
+  <div class="tab-wrap"><table>
+    <thead><tr><th>Data proposta</th><th>Paziente</th><th>Nascita</th><th>Provenienza</th>
+      <th>Arrivo previsto</th><th>Letto</th><th>Stato</th><th>Note organizzative</th><th></th></tr></thead>
+    <tbody>${righe.map(r=>{const p=paz(r.paz); return `<tr>
+      <td>${dataIt(r.proposta)}</td>
+      <td><b>${esc(p.cognome)} ${esc(p.nome)}</b> <span style="color:var(--testo-2);font-size:12px">${p.id}</span></td>
+      <td>${dataIt(p.nascita)}</td>
+      <td>${esc(r.provenienza)}</td>
+      <td>${dataIt(r.prevista)}</td>
+      <td>${esc(r.letto||'—')}</td>
+      <td><span class="tag t-blu"><span class="punto"></span>${ETICH_ST[r.stato]}</span></td>
+      <td style="max-width:220px;font-size:13px;color:var(--testo-2)">${esc(r.noteOrg||'')}</td>
+      <td class="az"><button class="btn-2" onclick="schedaPaziente('${r.id}')">${puo('scrive')?'Apri':'Consulta'}</button></td>
+    </tr>`}).join('') || `<tr><td colspan="9" class="vuoto">Nessuna proposta in lavorazione.</td></tr>`}</tbody>
+  </table></div>`;
+}
+function formRicovero(){
+  $('modali').innerHTML = `<div class="velo" onclick="if(event.target===this)chiudiModale()"><div class="modale">
+    <div class="modale-testa"><div><h3>Nuova proposta di ricovero</h3>
+      <div class="s">Crea l'anagrafica del paziente e apre l'episodio di ricovero</div></div>
+      <button class="chiudi" onclick="chiudiModale()">&times;</button></div>
+    <div class="modale-corpo"><div class="form-griglia">
+      <div class="campo"><label>Cognome</label><input id="nCog"></div>
+      <div class="campo"><label>Nome</label><input id="nNom"></div>
+      <div class="campo"><label>Data di nascita</label><input type="date" id="nNas"></div>
+      <div class="campo"><label>Sesso</label><select id="nSes"><option>F</option><option>M</option><option value="ND">Non dichiarato</option></select></div>
+      <div class="campo"><label>Data proposta</label><input type="date" id="nProp" value="${OGGI}"></div>
+      <div class="campo"><label>Arrivo previsto</label><input type="date" id="nPrev"></div>
+      <div class="campo medio"><label>Provenienza</label><select id="nProv">
+        ${['Pronto soccorso','Domicilio','AUSL','Altra struttura','Altro'].map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div class="campo"><label>Regime / convenzione</label><select id="nReg">
+        ${['SSN','Convenzione','Solvente','Altro'].map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div class="campo largo"><label>Note organizzative</label><textarea id="nNote" rows="2"></textarea></div>
+    </div>
+    <p style="font-size:13px;color:var(--testo-2);margin:14px 0 0">Letto, medico referente e livello di attenzione si compilano in agenda al momento dell'arrivo.</p>
+    </div>
+    <div class="modale-pie"><button class="btn-2" onclick="chiudiModale()">Annulla</button>
+      <button class="btn" onclick="salvaRicovero()">Crea proposta</button></div></div></div>`;
+}
+function salvaRicovero(){
+  const cog=$('nCog').value.trim(), nom=$('nNom').value.trim(), nas=$('nNas').value;
+  if(!cog||!nom||!nas){ toast('Cognome, nome e data di nascita sono obbligatori.'); return; }
+  let p = pazienti.find(x=>x.cognome.toLowerCase()===cog.toLowerCase()
+    && x.nome.toLowerCase()===nom.toLowerCase() && x.nascita===nas);
+  if(p){
+    const aperto = attivi().find(r=>r.paz===p.id);
+    if(aperto){ toast('Questo paziente ha già un ricovero aperto ('+aperto.id+').'); return; }
+    if(!confirm(`Esiste già un paziente con questi dati (${p.id}, ricoverato in passato).\n\nÈ la stessa persona? Premi OK per riusare l'anagrafica esistente, Annulla per fermarti.`)) return;
+  } else {
+    p = {id:'P'+(seqP++), cognome:cog, nome:nom, nascita:nas, sesso:$('nSes').value};
+    pazienti.push(p); traccia('CREAZIONE','pazienti',p.id,cog+' '+nom);
+  }
+  const r = {id:'R'+(seqR++), paz:p.id, letto:null, proposta:$('nProp').value||OGGI, presa:OGGI,
+    prevista:$('nPrev').value||null, arrivo:null, provenienza:$('nProv').value, medico:'',
+    regime:$('nReg').value, stato:'PROPOSTO', attenzione:'NV', visto:false, dimPrev:null,
+    dimEff:null, esito:null, noteOrg:$('nNote').value, note:'', checks:{}};
+  ricoveri.push(r); traccia('CREAZIONE','ricoveri',r.id,p.cognome+' '+p.nome);
+  chiudiModale(); pagina='ricoveri'; disegna(); toast('Proposta creata: '+r.id);
+}
+
+/* ======================= STORICO ======================= */
+function vStorico(){
+  const righe = ricoveri.filter(r=>r.dimEff).sort((a,b)=>b.dimEff.localeCompare(a.dimEff));
+  const ESITI={DOMICILIO:'Domicilio',TRASFERIMENTO:'Trasferimento',DECESSO:'Decesso',ALTRO:'Altro'};
+  $('vista').innerHTML = `
+  <div class="avviso">Nulla viene cancellato: i ricoveri conclusi restano qui e nelle esportazioni.
+    Se un paziente rientra, la sua anagrafica viene riutilizzata e si apre un nuovo episodio.</div>
+  <div class="tab-wrap"><table>
+    <thead><tr><th>Paziente</th><th>ID</th><th>Arrivo</th><th>Dimissione</th><th>Giorni</th>
+      <th>Letto</th><th>Esito</th><th>Checklist</th><th>Note</th></tr></thead>
+    <tbody>${righe.map(r=>{
+      const gi = r.arrivo ? Math.round((new Date(r.dimEff)-new Date(r.arrivo))/864e5) : '—';
+      return `<tr><td><b>${esc(nomeCompleto(r))}</b></td><td style="color:var(--testo-2)">${r.id} · ${r.paz}</td>
+      <td>${dataIt(r.arrivo)}</td><td>${dataIt(r.dimEff)}</td><td>${gi}</td><td>${esc(r.letto||'—')}</td>
+      <td>${esc(ESITI[r.esito]||'—')}</td><td><span class="conta ${fatti(r)===VOCI.length?'ok':'manca'}">${fatti(r)}/${VOCI.length}</span></td>
+      <td style="font-size:13px;color:var(--testo-2);max-width:220px">${esc(r.note||'')}</td></tr>`}).join('')
+      || `<tr><td colspan="9" class="vuoto">Nessun ricovero concluso.</td></tr>`}</tbody>
+  </table></div>`;
+}
+
+/* ======================= TRASPORTI ======================= */
+function vTrasporti(){
+  const righe = [...trasporti].sort((a,b)=>(a.data+a.ora).localeCompare(b.data+b.ora));
+  $('vista').innerHTML = bannerRuolo() + `
+  <div class="strumenti"><div style="color:var(--testo-2);font-size:13.5px">
+    Ogni trasporto è collegato a un ricovero: paziente e letto non si digitano.</div>
+    <div class="spinta">${puo('trasporti')?`<button class="btn" onclick="formTrasporto()">Nuovo trasporto</button>`:''}</div></div>
+  <div class="tab-wrap"><table>
+    <thead><tr><th>Data</th><th>Ora</th><th>Paziente</th><th>Letto</th><th>Destinazione</th>
+      <th>Motivo</th><th>Mezzo</th><th>Stato</th><th></th></tr></thead>
+    <tbody>${righe.map(t=>{const r=ric(t.ric); return `<tr>
+      <td>${t.data===OGGI?'<b style="color:var(--gialloG)">oggi</b>':dataIt(t.data)}</td>
+      <td>${esc(t.ora)}</td><td><b>${esc(nomeCompleto(r))}</b></td><td>${esc(r.letto||'—')}</td>
+      <td>${esc(t.dest)}</td><td>${esc(t.motivo)}</td><td>${esc(t.mezzo)}</td><td>${tagTr(t.stato)}</td>
+      <td class="az">${puo('trasporti')?`<select onchange="cambiaStatoTr('${t.id}',this.value)" style="padding:5px;border:1px solid #B9C7D2;border-radius:5px">
+        ${['DA_RICHIEDERE','RICHIESTO','CONFERMATO','EFFETTUATO','ANNULLATO'].map(s=>`<option value="${s}" ${t.stato===s?'selected':''}>${ETICH_TR[s]}</option>`).join('')}
+      </select>`:''}</td></tr>`}).join('') || `<tr><td colspan="9" class="vuoto">Nessun trasporto.</td></tr>`}</tbody>
+  </table></div>`;
+}
+function cambiaStatoTr(id,s){ const t=trasporti.find(x=>x.id===id); t.stato=s;
+  traccia('MODIFICA','trasporti',id,ETICH_TR[s]); disegna(); toast('Stato aggiornato.'); }
+function formTrasporto(){
+  const opz = inAgenda().map(r=>`<option value="${r.id}">${esc(nomeCompleto(r))} — letto ${esc(r.letto||'—')}</option>`).join('');
+  $('modali').innerHTML = `<div class="velo" onclick="if(event.target===this)chiudiModale()"><div class="modale stretta">
+    <div class="modale-testa"><div><h3>Nuovo trasporto</h3></div>
+      <button class="chiudi" onclick="chiudiModale()">&times;</button></div>
+    <div class="modale-corpo">
+      <div class="campo"><label>Paziente ricoverato</label><select id="tRic">${opz}</select></div>
+      <div class="campo"><label>Data</label><input type="date" id="tData" value="${OGGI}"></div>
+      <div class="campo"><label>Ora</label><input type="time" id="tOra" value="09:00"></div>
+      <div class="campo"><label>Destinazione</label><input id="tDest" placeholder="Domicilio, AOUP, altra struttura…"></div>
+      <div class="campo"><label>Motivo</label><select id="tMot">
+        ${['Dimissione','Esame diagnostico','Visita specialistica','Trasferimento','Altro'].map(s=>`<option>${s}</option>`).join('')}</select></div>
+      <div class="campo"><label>Mezzo / associazione</label><input id="tMezzo" value="Da assegnare"></div>
+      <div class="campo"><label>Stato</label><select id="tStato">
+        ${['DA_RICHIEDERE','RICHIESTO','CONFERMATO'].map(s=>`<option value="${s}">${ETICH_TR[s]}</option>`).join('')}</select></div>
+    </div>
+    <div class="modale-pie"><button class="btn-2" onclick="chiudiModale()">Annulla</button>
+      <button class="btn" onclick="salvaTrasporto()">Crea trasporto</button></div></div></div>`;
+}
+function salvaTrasporto(){
+  const dest = $('tDest').value.trim();
+  if(!dest){ toast('Indica la destinazione.'); return; }
+  const t = {id:'T'+(seqT++), ric:$('tRic').value, data:$('tData').value, ora:$('tOra').value,
+    dest, motivo:$('tMot').value, mezzo:$('tMezzo').value||'Da assegnare', stato:$('tStato').value, note:''};
+  trasporti.push(t); traccia('CREAZIONE','trasporti',t.id,dest);
+  chiudiModale(); pagina='trasporti'; disegna(); toast('Trasporto registrato: '+t.id);
+}
+
+/* ======================= DATI ======================= */
+function vDati(){
+  const box = (k,n,d,c) => `<div class="esporta-riga"><div><div class="n">${n}</div><div class="d">${d} — ${c} righe</div></div>
+    <div style="display:flex;gap:7px"><button class="btn-2" onclick="esporta('${k}','csv')">CSV</button>
+    <button class="btn-2" onclick="esporta('${k}','xlsx')">Excel</button></div></div>`;
+  $('vista').innerHTML = `
+  <div class="avviso">I file CSV sono salvati in UTF-8 con separatore punto e virgola, così Excel in italiano li apre senza passaggi manuali.
+    Ogni esportazione viene registrata nel log delle attività.</div>
+  <div class="pannello"><h3>Tabelle disponibili</h3><div class="esporta">
+    ${box('pazienti','Pazienti','Anagrafica delle persone',pazienti.length)}
+    ${box('ricoveri','Ricoveri attivi','Episodi in corso',attivi().length)}
+    ${box('storico','Ricoveri conclusi','Episodi chiusi',ricoveri.filter(r=>r.dimEff).length)}
+    ${box('trasporti','Trasporti','Spostamenti programmati ed effettuati',trasporti.length)}
+    ${box('checklist','Checklist per ricovero','Voci completate per episodio',attivi().length*VOCI.length)}
+    ${box('utenti','Utenti','Account e ruoli, senza password',utenti.length)}
+  </div></div>
+  ${puo('logv')?`<div class="pannello" style="margin-top:16px"><h3>Log attività di questa sessione</h3>
+    <div class="tab-wrap" style="border:0"><table><thead><tr><th>Data e ora</th><th>Utente</th><th>Azione</th><th>Entità</th><th>Record</th><th>Dettaglio</th></tr></thead>
+    <tbody>${log.slice(0,25).map(l=>`<tr><td>${esc(l.ora)}</td><td>${esc(l.utente)}</td><td>${esc(l.azione)}</td>
+      <td>${esc(l.entita)}</td><td>${esc(l.rec)}</td><td style="color:var(--testo-2)">${esc(l.dettaglio)}</td></tr>`).join('')
+      || '<tr><td colspan="6" class="vuoto">Nessuna attività registrata.</td></tr>'}</tbody></table></div></div>`:''}`;
+}
+function esporta(k,fmt){
+  if(fmt==='xlsx'){ toast('Nel prototipo è attivo solo il CSV. La versione finale genererà anche XLSX.'); return; }
+  let intest=[], righe=[];
+  const ESITI={DOMICILIO:'Domicilio',TRASFERIMENTO:'Trasferimento',DECESSO:'Decesso',ALTRO:'Altro'};
+  if(k==='pazienti'){ intest=['ID','Cognome','Nome','Data nascita','Eta','Sesso'];
+    righe = pazienti.map(p=>[p.id,p.cognome,p.nome,p.nascita,eta(p.nascita),p.sesso]); }
+  if(k==='ricoveri'||k==='storico'){
+    intest=['ID ricovero','ID paziente','Cognome','Nome','Eta','Letto','Reparto','Data proposta','Presa in carico',
+      'Arrivo previsto','Arrivo effettivo','Provenienza','Medico referente','Regime','Stato','Attenzione','Preso in carico',
+      'Dimissione prevista','Dimissione effettiva','Esito','Checklist completate','Totale voci','Note'];
+    righe = ricoveri.filter(r=> k==='storico' ? r.dimEff : !r.dimEff).map(r=>{
+      const p = paz(r.paz);
+      const att = (TAG_ATT[r.attenzione] || TAG_ATT.NV)[1];
+      return [r.id,p.id,p.cognome,p.nome,eta(p.nascita),r.letto||'',repartoDi(r.letto),r.proposta,r.presa,r.prevista||'',
+       r.arrivo||'',r.provenienza,r.medico,r.regime,ETICH_ST[r.stato],att,r.visto?'Si':'No',
+       r.dimPrev||'',r.dimEff||'',ESITI[r.esito]||'',fatti(r),VOCI.length,r.note]; }); }
+  if(k==='trasporti'){ intest=['ID','Ricovero','Paziente','Letto','Data','Ora','Destinazione','Motivo','Mezzo','Stato'];
+    righe = trasporti.map(t=>{const r=ric(t.ric); return [t.id,t.ric,nomeCompleto(r),r.letto||'',t.data,t.ora,t.dest,t.motivo,t.mezzo,ETICH_TR[t.stato]]; }); }
+  if(k==='checklist'){ intest=['ID ricovero','Paziente','Voce','Categoria','Completata'];
+    attivi().forEach(r=>VOCI.forEach(v=>righe.push([r.id,nomeCompleto(r),v.d,v.cat,(r.checks&&r.checks[v.id])?'Si':'No']))); }
+  if(k==='utenti'){ intest=['ID','Username','Nome','Cognome','Ruolo','Attivo'];
+    righe = utenti.map(u=>[u.id,u.username,u.nome,u.cognome,RUOLI[u.ruolo],u.attivo?'Si':'No']); }
+
+  const cella = v => { const s=String(v==null?'':v); return /[";\n]/.test(s) ? '"'+s.replace(/"/g,'""')+'"' : s; };
+  const csv = '\uFEFF' + [intest, ...righe].map(r=>r.map(cella).join(';')).join('\r\n');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+  a.download = 'cruscotto_'+k+'_'+OGGI+'.csv'; a.click(); URL.revokeObjectURL(a.href);
+  traccia('EXPORT',k,'—',righe.length+' righe'); toast('Esportate '+righe.length+' righe.');
+}
+
+/* ======================= UTENTI ======================= */
+function vUtenti(){
+  $('vista').innerHTML = `
+  <div class="avviso">Gli account non si cancellano: si disattivano. Altrimenti il log delle attività perde i riferimenti a chi ha fatto cosa.</div>
+  <div class="strumenti"><div style="color:var(--testo-2);font-size:13.5px">
+    Le password sono conservate solo cifrate: nemmeno l'amministratore può rileggerle, può solo generarne una provvisoria.</div>
+    <div class="spinta"><button class="btn" onclick="formUtente()">Nuovo utente</button></div></div>
+  <div class="tab-wrap"><table>
+    <thead><tr><th>ID</th><th>Nome utente</th><th>Nome e cognome</th><th>Ruolo</th><th>Permessi</th><th>Stato</th><th></th></tr></thead>
+    <tbody>${utenti.map(u=>`<tr>
+      <td>${u.id}</td><td><b>${esc(u.username)}</b></td><td>${esc(u.nome)} ${esc(u.cognome)}</td>
+      <td>${RUOLI[u.ruolo]}</td><td style="font-size:13px;color:var(--testo-2)">${permessiTesto(u.ruolo)}</td>
+      <td>${u.attivo?'<span class="tag t-verde"><span class="punto"></span>Attivo</span>':'<span class="tag t-grigio"><span class="punto"></span>Disattivato</span>'}</td>
+      <td class="az">
+        <button class="btn-2" onclick="resetPwd('${u.id}')">Reimposta password</button>
+        ${u.id==='U0'?'':`<button class="btn-danger" onclick="attivaUtente('${u.id}')">${u.attivo?'Disattiva':'Riattiva'}</button>`}
+      </td></tr>`).join('')}</tbody>
+  </table></div>
+  <div class="pannello" style="margin-top:16px"><h3>Voci della checklist di dimissione</h3>
+    <p style="color:var(--testo-2);font-size:13.5px;margin-top:0">Sono ${VOCI.length}, non 20: il numero deve restare configurabile, perché il conteggio in agenda si adegua da solo.</p>
+    ${[...new Set(VOCI.map(v=>v.cat))].map(c=>`<div style="margin-bottom:10px">
+      <b style="color:var(--blu-scuro);font-size:14px">${esc(c)}</b>
+      <div style="font-size:13.5px;color:var(--testo-2);margin-top:3px">${VOCI.filter(v=>v.cat===c).map(v=>esc(v.d)).join(' · ')}</div></div>`).join('')}
+  </div>`;
+}
+function permessiTesto(r){
+  const l=[]; if(PERM.scrive.includes(r)) l.push('modifica'); else l.push('sola lettura');
+  if(PERM.accetta.includes(r)) l.push('accettazione'); if(PERM.esporta.includes(r)) l.push('esportazione');
+  if(PERM.utenti.includes(r)) l.push('gestione utenti'); return l.join(', ');
+}
+function attivaUtente(id){ const u=utenti.find(x=>x.id===id); u.attivo=!u.attivo;
+  traccia('GESTIONE_UTENTE','utenti',id,u.attivo?'riattivato':'disattivato'); disegna();
+  toast('Utente '+(u.attivo?'riattivato':'disattivato')+'.'); }
+function resetPwd(id){ const u=utenti.find(x=>x.id===id);
+  const p = 'Cdc'+Math.random().toString(36).slice(2,7)+'!'; u.pwd=p;
+  traccia('GESTIONE_UTENTE','utenti',id,'reset password');
+  alert(`Password provvisoria per ${u.username}:\n\n${p}\n\nComunicala all'utente di persona o per telefono, mai via email. Nella versione finale ne verrà richiesto il cambio al primo accesso.`); }
+function formUtente(){
+  $('modali').innerHTML = `<div class="velo" onclick="if(event.target===this)chiudiModale()"><div class="modale stretta">
+    <div class="modale-testa"><div><h3>Nuovo utente</h3></div>
+      <button class="chiudi" onclick="chiudiModale()">&times;</button></div>
+    <div class="modale-corpo">
+      <div class="campo"><label>Nome</label><input id="uNome"></div>
+      <div class="campo"><label>Cognome</label><input id="uCog"></div>
+      <div class="campo"><label>Nome utente</label><input id="uUser" placeholder="nome.cognome"></div>
+      <div class="campo"><label>Ruolo</label><select id="uRuolo">
+        ${Object.entries(RUOLI).map(([k,v])=>`<option value="${k}">${v}</option>`).join('')}</select></div>
+      <p style="font-size:13px;color:var(--testo-2);margin:0">La password provvisoria viene generata automaticamente e mostrata una sola volta.</p>
+    </div>
+    <div class="modale-pie"><button class="btn-2" onclick="chiudiModale()">Annulla</button>
+      <button class="btn" onclick="salvaUtente()">Crea utente</button></div></div></div>`;
+}
+function salvaUtente(){
+  const n=$('uNome').value.trim(), c=$('uCog').value.trim(), us=$('uUser').value.trim().toLowerCase();
+  if(!n||!c||!us){ toast('Compila nome, cognome e nome utente.'); return; }
+  if(utenti.some(x=>x.username.toLowerCase()===us)){ toast('Nome utente già in uso.'); return; }
+  const p='Cdc'+Math.random().toString(36).slice(2,7)+'!';
+  const u={id:'U'+(seqU++), username:us, pwd:p, nome:n, cognome:c, ruolo:$('uRuolo').value, attivo:true};
+  utenti.push(u); traccia('GESTIONE_UTENTE','utenti',u.id,'creato');
+  chiudiModale(); disegna();
+  alert(`Utente ${us} creato.\n\nPassword provvisoria: ${p}\n\nComunicala di persona. Va cambiata al primo accesso.`);
+}
+</script>
+</body>
+</html>
