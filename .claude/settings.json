@@ -8,7 +8,9 @@
       "PowerShell(Get-Process -Name waitress-serve -ErrorAction SilentlyContinue)",
       "PowerShell(.\\\\.venv\\\\Scripts\\\\python.exe -c \"from wsgi import app; c=app.test_client\\(\\); print\\('App appena caricata, GET /accedi ->', c.get\\('/accedi'\\).status_code\\)\")",
       "PowerShell(Stop-Process -Id 1880 -Force -ErrorAction SilentlyContinue; Start-Sleep -Milliseconds 800; $env:FLASK_APP=\"wsgi.py\"; $p = Start-Process -FilePath \".\\\\.venv\\\\Scripts\\\\waitress-serve.exe\" -ArgumentList \"--listen=127.0.0.1:5000\",\"wsgi:app\" -PassThru; Start-Sleep -Seconds 3; Write-Output \"Nuovo processo: $\\($p.Id\\) avviato $\\(Get-Date -Format 'HH:mm:ss'\\)\")",
-      "PowerShell(& \"C:\\\\Users\\\\MIHNEA~1.MOL\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-mihnea-molnar-Desktop-CruscottoDegenze-Cruscotto-Degenze\\\\2cc35a3a-8453-4434-907d-4066c21bddd0\\\\scratchpad\\\\prova_server_vivo.ps1\")"
+      "PowerShell(& \"C:\\\\Users\\\\MIHNEA~1.MOL\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-mihnea-molnar-Desktop-CruscottoDegenze-Cruscotto-Degenze\\\\2cc35a3a-8453-4434-907d-4066c21bddd0\\\\scratchpad\\\\prova_server_vivo.ps1\")",
+      "PowerShell($env:PYTHONPATH=\\(Get-Location\\).Path; .\\\\.venv\\\\Scripts\\\\python.exe \"C:\\\\Users\\\\MIHNEA~1.MOL\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-mihnea-molnar-Desktop-CruscottoDegenze-Cruscotto-Degenze\\\\2cc35a3a-8453-4434-907d-4066c21bddd0\\\\scratchpad\\\\prova_eliminazione.py\")",
+      "PowerShell($env:PYTHONPATH=\\(Get-Location\\).Path; .\\\\.venv\\\\Scripts\\\\python.exe \"C:\\\\Users\\\\MIHNEA~1.MOL\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\c--Users-mihnea-molnar-Desktop-CruscottoDegenze-Cruscotto-Degenze\\\\2cc35a3a-8453-4434-907d-4066c21bddd0\\\\scratchpad\\\\misura_spazio.py\")"
     ]
   }
 }

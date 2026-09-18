@@ -224,6 +224,14 @@ tr:last-child td{border-bottom:none}
 }
 .azioni button:hover:not(:disabled){border-color:var(--accento); color:var(--accento)}
 .azioni button:disabled{opacity:.45; cursor:not-allowed}
+/* Il PDF è un collegamento, non un pulsante: qui gli si dà lo stesso aspetto
+   degli altri, così la fila di azioni resta allineata. */
+.azioni .bottone-azione{
+  border:1px solid var(--bordo); background:transparent; color:var(--tenue);
+  border-radius:5px; padding:5px 10px; font-size:12px;
+  text-decoration:none; line-height:1.5;
+}
+.azioni .bottone-azione:hover{border-color:var(--accento); color:var(--accento)}
 .azioni button.agenda{color:var(--accento); border-color:var(--accento); font-weight:500}
 .azioni button.agenda:disabled{color:var(--tenue); border-color:var(--bordo)}
 .azioni button.agenda .n{

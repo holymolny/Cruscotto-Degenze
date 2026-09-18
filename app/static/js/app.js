@@ -113,6 +113,10 @@
       pazienteAperto = bottone.dataset.paziente;
       document.getElementById("agenda-titolo").textContent = bottone.dataset.nome;
       document.getElementById("agenda-sotto").textContent = bottone.dataset.sotto;
+
+      var scarica = document.getElementById("agenda-pdf");
+      if (scarica) scarica.href = "/paziente/" + pazienteAperto + "/pdf";
+
       document.getElementById("agenda-corpo").innerHTML =
         '<p class="vuoto-agenda">Caricamento…</p>';
       apri("velo-agenda");

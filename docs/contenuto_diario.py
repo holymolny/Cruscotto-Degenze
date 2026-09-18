@@ -13,7 +13,7 @@ paragrafi come se fossero HTML.
 """
 
 # Compare in copertina e nel piè di pagina.
-VERSIONE = "1.4"
+VERSIONE = "1.5"
 SOTTOTITOLO = "Diario di sviluppo"
 
 CONTENUTO = [
@@ -88,7 +88,7 @@ CONTENUTO = [
                 ["4", "Home «Pazienti ricoverati»", "FATTO"],
                 ["5", "Agenda delle note", "FATTO"],
                 ["6", "Checklist di dimissione", "FATTO"],
-                ["7", "PDF del paziente", "da fare"],
+                ["7", "PDF del paziente", "FATTO"],
                 ["8", "Gestione utenti e registro accessi", "da fare"],
                 ["9", "Test automatici e rifinitura grafica", "da fare"],
             ],
@@ -1382,18 +1382,178 @@ tests/
         ],
     ),
 
+    ("pagina_nuova", None),
+
+    # ==================================================================
+    ("titolo1", "Passo 7 — Il PDF del paziente"),
+    (
+        "paragrafo",
+        "Obiettivo del passo: il foglio da stampare prima di dimettere qualcuno. "
+        "Titolo, dati del paziente, checklist su due colonne con le caselle spuntate "
+        "e lo storico delle note con le stesse firme dell'Agenda.",
+    ),
+
+    ("titolo2", "Perché il PDF lo fa il server"),
+    (
+        "paragrafo",
+        "Il prototipo generava il PDF nel browser, con una libreria da 400 KB "
+        "incorporata nella pagina. Qui lo genera il server, con ReportLab. Tre "
+        "motivi:",
+    ),
+    (
+        "elenco",
+        [
+            "funziona uguale su Edge e su Chrome, senza dipendere da cosa il "
+            "browser riesce a fare;",
+            "non serve internet, e la pagina resta leggera;",
+            "il documento riporta i dati del database, non quelli che per caso "
+            "erano a schermo in quel momento.",
+        ],
+    ),
+
+    ("titolo2", "Il font DejaVu incluso nel progetto"),
+    (
+        "paragrafo",
+        "ReportLab ha Helvetica già dentro, e sulle lettere accentate se la cava. Ma "
+        "copre solo l'alfabeto occidentale di base: su un carattere fuori elenco "
+        "stampa un quadratino nero. La specifica chiede quindi <b>DejaVu Sans incluso "
+        "nel progetto</b>, ed è la scelta giusta per un motivo in più: il risultato è "
+        "identico sul PC di sviluppo e sulla macchina virtuale, dove i font installati "
+        "sono altri.",
+    ),
+    (
+        "paragrafo",
+        "I tre file (normale, grassetto, corsivo) stanno in app/static/font/ con la "
+        "loro licenza. Vengono registrati una volta sola per processo: ReportLab tiene "
+        "un elenco globale, e ripetere la registrazione a ogni PDF sarebbe uno spreco.",
+    ),
+
+    ("titolo2", "Le caselle disegnate a mano"),
+    (
+        "paragrafo",
+        "Le caselle della checklist non usano i caratteri ☑ e ☐, ma sono disegnate: "
+        "un rettangolo e, se spuntata, due segmenti. Quei simboli non esistono in "
+        "tutti i font, e se un domani si cambiasse font al loro posto comparirebbero "
+        "dei quadratini vuoti senza che nessuno capisca perché.",
+    ),
+    (
+        "paragrafo",
+        "È il primo <i>flowable</i> scritto da noi: una classe che sa disegnarsi da "
+        "sola su una tela e che ReportLab impagina come qualunque altro pezzo di "
+        "contenuto. Lo stesso vale per il pallino della gravità, con gli stessi colori "
+        "dello schermo.",
+    ),
+
+    ("titolo2", "Due bug trovati dai test"),
+    (
+        "riquadro",
+        (
+            "Il colore senza il cancelletto",
+            "La firma di ogni nota è colorata secondo il ruolo. Il colore lo "
+            "costruivo con hexval()[2:], che dà «6b4fa0» — ma ReportLab vuole "
+            "«#6b4fa0», e senza il cancelletto la generazione del PDF falliva. Non "
+            "era visibile da nessuna parte: i PDF senza note funzionavano "
+            "benissimo, e il guasto sarebbe comparso la prima volta che qualcuno "
+            "stampava una scheda con delle note dentro.",
+        ),
+    ),
+    (
+        "paragrafo",
+        "Il secondo riguarda i <b>segni speciali nelle note</b>. ReportLab legge i "
+        "paragrafi come XML: una nota che contenga «PA &lt; 90 &amp; FC &gt; 100» "
+        "farebbe fallire la generazione. I tre caratteri vanno disinnescati, e "
+        "l'ordine conta — la &amp; va sostituita per prima, altrimenti si "
+        "rovinerebbero le sostituzioni fatte dopo.",
+    ),
+    (
+        "paragrafo",
+        "È il tipo di errore che si presenta il giorno in cui un medico scrive una "
+        "disuguaglianza in una nota, e non un minuto prima. C'è un test apposta.",
+    ),
+
+    ("titolo2", "Dettagli di consegna"),
+    (
+        "tabella",
+        {
+            "intestazioni": ["Scelta", "Perché"],
+            "righe": [
+                [
+                    "Content-Disposition: attachment",
+                    "Il browser scarica il file invece di aprirlo in una scheda. In "
+                    "reparto il gesto è «stampo e allego alla cartella», non «leggo "
+                    "a video».",
+                ],
+                [
+                    "Cache-Control: no-store",
+                    "La scheda contiene tutte le note del paziente e i PC di reparto "
+                    "sono condivisi: non deve restare nella cache del browser.",
+                ],
+                [
+                    "Nome del file ripulito",
+                    "«De Santis Anna Maria» diventa "
+                    "Agenda_De_Santis_Anna_Maria_2026-09-18.pdf: spazi e caratteri "
+                    "strani nel nome di un file scaricato creano guai su Windows.",
+                ],
+                [
+                    "Un collegamento, non un pulsante",
+                    "Scaricare un file è una navigazione: così funziona anche il "
+                    "tasto destro «Salva con nome».",
+                ],
+                [
+                    "Download registrato",
+                    "La scheda porta fuori dal programma tutte le note del paziente: "
+                    "sapere chi l'ha scaricata e quando conta.",
+                ],
+            ],
+            "larghezze": [150, 320],
+        },
+    ),
+
+    ("titolo2", "I test"),
+    (
+        "paragrafo",
+        "Da 138 a <b>162</b>. Per controllare il contenuto dei PDF i test li "
+        "rileggono con pypdf, che serve soltanto ai test. I più significativi:",
+    ),
+    (
+        "elenco",
+        [
+            "il file comincia con %PDF- e finisce con %%EOF;",
+            "«Continuità», «Città» e «Perché» si rileggono intatti dal PDF;",
+            "una nota con «PA &lt; 90 &amp; FC &gt; 100» non fa fallire la generazione;",
+            "le note eliminate non compaiono nel foglio;",
+            "il contatore della checklist riflette le spunte vere;",
+            "con 60 note il documento va su più pagine e il piè di pagina dice "
+            "«Pagina 1 di 5», «Pagina 2 di 5» e così via fino in fondo;",
+            "l'OSS riceve 403 e non vede nemmeno il collegamento;",
+            "Amministrazione / IT invece può scaricare.",
+        ],
+    ),
+
+    ("titolo2", "Esito"),
+    (
+        "elenco",
+        [
+            "Scheda generata per un paziente vero: 1 pagina, 45 KB.",
+            "Dati, checklist 5/20 e cinque note raggruppate per giorno, una con "
+            "«modificata il».",
+            "Scaricata dal server in ascolto: attachment, no-store, nome corretto.",
+            "pytest: 162 test su 162 passati.",
+        ],
+    ),
+
     # ------------------------------------------------------------------
     ("titolo1", "Prossimo passo"),
     (
         "paragrafo",
-        "<b>Passo 7 — Il PDF del paziente.</b> Il foglio da stampare prima di "
-        "dimettere qualcuno: dati del paziente, checklist su due colonne e storico "
-        "delle note, generato con ReportLab. È la stessa libreria di questo diario, "
-        "quindi la tecnica è già stata vista.",
+        "<b>Passo 8 — Gestione utenti e registro accessi.</b> La pagina con cui "
+        "l'amministratore crea gli account, cambia i ruoli, reimposta le password e "
+        "sblocca chi si è chiuso fuori; e la pagina di consultazione del registro, con "
+        "filtri per periodo, utente e azione.",
     ),
     (
         "paragrafo",
-        "Poi il <b>passo 8</b> con la gestione utenti e il registro accessi, e il "
-        "<b>passo 9</b> con la rifinitura grafica.",
+        "Poi il <b>passo 9</b>: rifinitura grafica fedele al prototipo e chiusura "
+        "della Fase 1.",
     ),
 ]

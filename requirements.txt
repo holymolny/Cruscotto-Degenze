@@ -26,6 +26,10 @@ waitress==3.0.2
 
 # --- Test ---
 pytest==9.1.1
+# Serve solo ai test, per rileggere i PDF generati e controllarne il contenuto.
+# Sulla macchina virtuale non è necessario, ma lasciarlo qui costa poco e
+# permette di lanciare i test anche là dopo un aggiornamento.
+pypdf==6.19.0
 
 # --- Fase 2, macchina virtuale: da scommentare solo là ---
 # pyodbc==5.2.0

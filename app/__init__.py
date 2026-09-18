@@ -83,10 +83,12 @@ def _registra_blueprint(app: Flask) -> None:
     from app.agenda import agenda_bp
     from app.auth import auth_bp
     from app.pazienti import pazienti_bp
+    from app.pdf import pdf_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(pazienti_bp)
     app.register_blueprint(agenda_bp)
+    app.register_blueprint(pdf_bp)
 
 
 def _registra_aiuti_template(app: Flask) -> None:

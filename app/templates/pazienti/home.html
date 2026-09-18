@@ -121,7 +121,12 @@
                     </button>
 
                     {% if utente_puo(SCARICARE_PDF) %}
-                      <button type="button" disabled title="Disponibile dal passo 7">PDF</button>
+                      {# Un collegamento e non un pulsante: scaricare un file è
+                         una navigazione, e così funziona anche il tasto destro
+                         «Salva con nome». #}
+                      <a class="bottone-azione"
+                         href="{{ url_for('pdf.scheda', paziente_id=paziente.id) }}"
+                         title="Scarica la scheda da stampare">PDF</a>
                     {% endif %}
 
                     {% if utente_puo(SPOSTARE_PAZIENTE) %}
@@ -168,6 +173,9 @@
     </div>
     <div class="modale-corpo" id="agenda-corpo"></div>
     <div class="modale-piede">
+      {% if utente_puo(SCARICARE_PDF) %}
+        <a class="btn btn-secondario" id="agenda-pdf" href="#">Scarica PDF</a>
+      {% endif %}
       <button type="button" class="btn" data-azione="chiudi">Chiudi</button>
     </div>
   </div>

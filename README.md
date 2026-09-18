@@ -21,7 +21,7 @@ degenza e la dimissione.
 | 4 | Home "Pazienti ricoverati" | ✅ fatto |
 | 5 | Agenda delle note | ✅ fatto |
 | 6 | Checklist di dimissione | ✅ fatto |
-| 7 | PDF del paziente | da fare |
+| 7 | PDF del paziente | ✅ fatto |
 | 8 | Gestione utenti e registro accessi | da fare |
 | 9 | Test automatici e rifinitura grafica | da fare |
 
