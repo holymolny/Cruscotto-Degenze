@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block titolo %}Pagina non trovata — Cruscotto Degenze{% endblock %}
+
+{% block corpo %}
+<section class="schermo-intero">
+  <div class="card-login card-errore">
+    <h1>Pagina non trovata</h1>
+    <p>L'indirizzo richiesto non esiste, oppure la cosa che cercavi è stata rimossa.</p>
+    <a class="btn" href="{{ url_for('pazienti.home') }}">Torna al Cruscotto</a>
+  </div>
+</section>
+{% endblock %}

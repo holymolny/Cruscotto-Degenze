@@ -1,0 +1,21 @@
+{# Errore imprevisto. Nessun dettaglio tecnico in pagina: il messaggio
+   completo finisce nel log del server, dove lo legge l'IT. All'utente non
+   serve, e mostrare la struttura interna del programma aiuterebbe soltanto
+   chi volesse attaccarlo. #}
+{% extends "base.html" %}
+
+{% block titolo %}Errore imprevisto — Cruscotto Degenze{% endblock %}
+
+{% block corpo %}
+<section class="schermo-intero">
+  <div class="card-login card-errore">
+    <h1>Errore imprevisto</h1>
+    <p>Qualcosa non ha funzionato. L'operazione non è stata salvata.</p>
+    <p class="tenue">
+      Riprova fra poco. Se il problema si ripete, segnalalo all'IT indicando
+      l'ora e cosa stavi facendo.
+    </p>
+    <a class="btn" href="{{ url_for('pazienti.home') }}">Torna al Cruscotto</a>
+  </div>
+</section>
+{% endblock %}

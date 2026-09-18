@@ -1,0 +1,140 @@
+{# Contenuto dell'Agenda di un paziente.
+
+   Non è una pagina: è il pezzo che il JavaScript infila dentro la finestra
+   aperta sopra la home. Per questo non estende nessun template e non ha
+   <html> né <body>.
+
+   L'ordine è quello della specifica: checklist in alto, poi il campo per la
+   nuova nota, poi l'elenco delle note. #}
+
+{% if errore %}
+  <p class="messaggio messaggio-errore">{{ errore }}</p>
+{% endif %}
+
+{# ---------- CHECKLIST DI DIMISSIONE ---------- #}
+<details class="checklist" id="riquadro-checklist" open>
+  <summary>
+    Checklist dimissione
+    <span class="contatore {{ 'completa' if totale_spuntate == totale_voci }}"
+          id="checklist-contatore">{{ totale_spuntate }}/{{ totale_voci }}</span>
+    <span class="barra">
+      <i id="checklist-barra"
+         style="width: {{ (totale_spuntate / totale_voci * 100) | round | int if totale_voci else 0 }}%"></i>
+    </span>
+  </summary>
+
+  <div class="voci" data-paziente="{{ paziente.id }}" data-totale="{{ totale_voci }}">
+    {% for voce in voci_checklist %}
+      {% set spuntata = voce.codice in codici_spuntati %}
+      <label class="voce-check {{ 'fatta' if spuntata }} {{ 'bloccata' if not puo_spuntare }}">
+        <input type="checkbox"
+               data-azione="spunta"
+               data-codice="{{ voce.codice }}"
+               {% if spuntata %}checked{% endif %}
+               {% if not puo_spuntare %}disabled{% endif %}>
+        <span>{{ voce.testo }}</span>
+      </label>
+    {% endfor %}
+  </div>
+
+  {% if not puo_spuntare %}
+    <p class="nota-lettura">Il tuo ruolo può consultare la checklist ma non modificarla.</p>
+  {% endif %}
+</details>
+
+{# ---------- NUOVA NOTA ---------- #}
+{% if puo_scrivere %}
+  <div class="composizione">
+    <p class="firma">
+      Scrivi come {{ etichetta_ruolo_nota(current_user.ruolo) }}:
+      {{ current_user.nome_completo }}, data {{ data_italiana(oggi_italia()) }}
+    </p>
+    <form method="post"
+          action="{{ url_for('agenda.crea_nota', paziente_id=paziente.id) }}"
+          data-modulo="agenda" novalidate>
+      {{ form_nota.hidden_tag() }}
+      {{ form_nota.testo(maxlength=2000, rows=3,
+                         placeholder="Scrivi una nota organizzativa…") }}
+      <div class="bottoni-composizione">
+        <button type="submit" class="btn">Salva nota</button>
+      </div>
+    </form>
+  </div>
+{% else %}
+  <p class="solo-lettura">
+    Il tuo ruolo può leggere l'Agenda ma non scrivere note.
+  </p>
+{% endif %}
+
+{# ---------- ELENCO DELLE NOTE ---------- #}
+{% if not gruppi %}
+  <p class="vuoto-agenda">Nessuna nota per questo paziente.</p>
+{% endif %}
+
+{% for giorno, note in gruppi %}
+  <p class="giorno">{{ intestazione_giorno(giorno) }}</p>
+
+  {% for nota in note %}
+    {% set mia = nota.autore_id == current_user.id %}
+    <article class="nota" data-ruolo="{{ nota.autore_ruolo }}">
+      <div class="nota-testa">
+        <span class="nota-autore">
+          <span class="ruolo">{{ etichetta_ruolo_nota(nota.autore_ruolo) }}:</span>
+          {{ nota.autore_nome }}
+        </span>
+        <span class="nota-data">{{ data_italiana(nota.data_nota) }}</span>
+        {% if nota.modificata_il %}
+          <span class="nota-modificata">
+            modificata il {{ data_italiana(a_ora_italiana(nota.modificata_il).date()) }}
+          </span>
+        {% endif %}
+
+        {# I pulsanti compaiono solo all'autore. Ma il controllo vero è sul
+           server: chi conosce l'indirizzo può provare comunque, e si becca
+           un rifiuto. #}
+        {% if mia and puo_scrivere %}
+          <span class="nota-azioni">
+            <button type="button" data-azione="modifica-nota" data-nota="{{ nota.id }}">Modifica</button>
+            <button type="button" class="via" data-azione="elimina-nota"
+                    data-nota="{{ nota.id }}">Elimina</button>
+          </span>
+        {% endif %}
+      </div>
+
+      {# white-space:pre-wrap nel CSS conserva gli a capo scritti dall'utente
+         senza bisogno di trasformarli in <br>, che andrebbero disinnescati
+         uno per uno. #}
+      <p data-testo-nota>{{ nota.testo }}</p>
+
+      {% if mia and puo_scrivere %}
+        <div class="modifica-box" data-modifica="{{ nota.id }}" hidden>
+          <form method="post"
+                action="{{ url_for('agenda.modifica_nota', nota_id=nota.id) }}"
+                data-modulo="agenda" novalidate>
+            {{ form_nota.hidden_tag() }}
+            <textarea name="testo" maxlength="2000" rows="3">{{ nota.testo }}</textarea>
+            <div class="bottoni">
+              <button type="submit" class="btn">Salva modifica</button>
+              <button type="button" class="btn btn-secondario"
+                      data-azione="annulla-modifica" data-nota="{{ nota.id }}">Annulla</button>
+            </div>
+          </form>
+        </div>
+
+        <div class="conferma-inline" data-conferma="{{ nota.id }}" hidden>
+          <p>Eliminare questa nota? Sparirà dall'Agenda e dal PDF.</p>
+          <form method="post"
+                action="{{ url_for('agenda.elimina_nota', nota_id=nota.id) }}"
+                data-modulo="agenda" novalidate>
+            {{ form_senza_campi.hidden_tag() }}
+            <div class="bottoni">
+              <button type="submit" class="btn btn-pericolo">Elimina nota</button>
+              <button type="button" class="btn btn-secondario"
+                      data-azione="annulla-elimina" data-nota="{{ nota.id }}">Annulla</button>
+            </div>
+          </form>
+        </div>
+      {% endif %}
+    </article>
+  {% endfor %}
+{% endfor %}

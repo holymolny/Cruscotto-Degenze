@@ -1,0 +1,281 @@
+{# Home «Pazienti ricoverati»: un riquadro per reparto.
+
+   Nota sul JavaScript: in questa pagina non c'è nemmeno un onclick.
+   La Content-Security-Policy consente solo codice servito da noi, e un
+   onclick scritto dentro l'HTML è codice dentro la pagina: verrebbe
+   bloccato dal browser. Tutti i comportamenti sono agganciati in app.js
+   attraverso gli attributi data-*. #}
+{% extends "base_app.html" %}
+{% set sezione = "pazienti" %}
+
+{% block titolo %}Pazienti ricoverati — Cruscotto Degenze{% endblock %}
+
+{% block contenuto %}
+<h2>Pazienti ricoverati</h2>
+<p class="intro">
+  {% if utente_puo(SCRIVERE_NOTE) %}
+    Apri l'Agenda di un paziente per leggere e scrivere le note.
+    Il pallino cambia la gravità.
+  {% else %}
+    Accesso in sola lettura: puoi consultare l'Agenda dei pazienti ma non scrivere.
+  {% endif %}
+</p>
+
+<div class="legenda">
+  <span><i class="pallino" data-g="rosso"></i> Critico</span>
+  <span><i class="pallino" data-g="giallo"></i> Instabile</span>
+  <span><i class="pallino" data-g="verde"></i> Stabile</span>
+  <span><i class="pallino" data-g="nv"></i> Non valutato</span>
+</div>
+
+{% for reparto in reparti %}
+  {% set pazienti = elenchi[reparto.id] %}
+  <section class="reparto">
+    <div class="reparto-testa">
+      <h3>{{ reparto.nome }}</h3>
+      <span class="conteggio">
+        {% if pazienti|length == 0 %}nessun paziente
+        {% elif pazienti|length == 1 %}1 paziente
+        {% else %}{{ pazienti|length }} pazienti{% endif %}
+      </span>
+      {% if utente_puo(INSERIRE_PAZIENTE) %}
+        <div class="destra">
+          <button type="button" class="btn btn-secondario"
+                  data-azione="apri-nuovo"
+                  data-reparto="{{ reparto.id }}"
+                  data-reparto-nome="{{ reparto.nome }}">Inserisci paziente</button>
+        </div>
+      {% endif %}
+    </div>
+
+    {% if not pazienti %}
+      <p class="vuoto">
+        Nessun paziente ricoverato in questo reparto.
+        {%- if utente_puo(INSERIRE_PAZIENTE) %} Usa “Inserisci paziente” per aggiungerne uno.{% endif %}
+      </p>
+    {% else %}
+      <div class="tabella-scorre">
+        <table>
+          <thead>
+            <tr>
+              <th class="col-paziente">Paziente</th>
+              <th class="col-letto">Letto</th>
+              <th class="col-data">Data arrivo</th>
+              <th class="col-data">Dimissione presunta</th>
+              <th class="col-gravita">Gravità</th>
+              <th class="col-azioni">Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for paziente in pazienti %}
+              <tr>
+                <td>{{ paziente.etichetta }}</td>
+                <td>{{ paziente.posto_letto }}</td>
+                <td>{{ data_italiana(paziente.data_arrivo) }}</td>
+
+                <td>
+                  {% if utente_puo(MODIFICARE_DIMISSIONE) %}
+                    <button type="button" class="data-modificabile"
+                            data-azione="apri-dimissione"
+                            data-paziente="{{ paziente.id }}"
+                            data-nome="{{ paziente.etichetta }}"
+                            data-arrivo="{{ paziente.data_arrivo.isoformat() }}"
+                            data-data="{{ paziente.data_dimissione_presunta.isoformat() if paziente.data_dimissione_presunta else '' }}"
+                            title="Modifica la dimissione presunta">
+                      {% if paziente.data_dimissione_presunta %}
+                        {{ data_italiana(paziente.data_dimissione_presunta) }}
+                      {% else %}
+                        <span class="da-definire">da definire</span>
+                      {% endif %}
+                    </button>
+                  {% else %}
+                    {% if paziente.data_dimissione_presunta %}
+                      {{ data_italiana(paziente.data_dimissione_presunta) }}
+                    {% else %}
+                      <span class="da-definire">da definire</span>
+                    {% endif %}
+                  {% endif %}
+                </td>
+
+                <td>
+                  {# Un <button> e non un <div>: si raggiunge con il tabulatore
+                     e si attiva con la barra spaziatrice, come ogni pulsante. #}
+                  <button type="button" class="pallino"
+                          data-g="{{ paziente.gravita }}"
+                          data-azione="gravita"
+                          data-paziente="{{ paziente.id }}"
+                          {% if not utente_puo(CAMBIARE_GRAVITA) %}disabled{% endif %}
+                          aria-label="Gravità: {{ gravita_etichette[paziente.gravita] }}"
+                          title="{{ gravita_etichette[paziente.gravita] }}"></button>
+                </td>
+
+                <td class="col-azioni">
+                  <div class="azioni">
+                    <button type="button" class="agenda"
+                            data-azione="apri-agenda"
+                            data-paziente="{{ paziente.id }}"
+                            data-nome="{{ paziente.etichetta }}"
+                            data-sotto="{{ paziente.reparto.nome }} · letto {{ paziente.posto_letto }} · arrivo {{ data_italiana(paziente.data_arrivo) }} · dimissione {{ data_italiana(paziente.data_dimissione_presunta) }}">
+                      Agenda <span class="n"
+                                   data-contatore-note="{{ paziente.id }}">{{ note_per_paziente.get(paziente.id, 0) }}</span>
+                    </button>
+
+                    {% if utente_puo(SCARICARE_PDF) %}
+                      <button type="button" disabled title="Disponibile dal passo 7">PDF</button>
+                    {% endif %}
+
+                    {% if utente_puo(SPOSTARE_PAZIENTE) %}
+                      <button type="button"
+                              data-azione="apri-sposta"
+                              data-paziente="{{ paziente.id }}"
+                              data-nome="{{ paziente.etichetta }}"
+                              data-reparto="{{ paziente.reparto_id }}"
+                              data-letto="{{ paziente.posto_letto }}">Sposta</button>
+                    {% endif %}
+
+                    {% if utente_puo(ELIMINARE_PAZIENTE) %}
+                      <button type="button" class="via"
+                              data-azione="apri-elimina"
+                              data-paziente="{{ paziente.id }}"
+                              data-nome="{{ paziente.etichetta }}"
+                              data-letto="{{ paziente.posto_letto }}">Elimina</button>
+                    {% endif %}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </section>
+{% endfor %}
+
+
+{# ------------------------------------------------------------------
+   FINESTRE. Sono nell'HTML fin da subito ma nascoste: aprirle è solo
+   questione di una classe CSS, senza dover costruire nulla al momento.
+   ------------------------------------------------------------------ #}
+
+{# L'Agenda del paziente. Il contenuto arriva dal server quando si clicca:
+   costruirlo per tutti i pazienti in anticipo significherebbe scaricare
+   centinaia di note che magari nessuno aprirà. #}
+<div class="velo" id="velo-agenda" data-finestra>
+  <div class="modale">
+    <div class="modale-testa">
+      <h3 id="agenda-titolo"></h3>
+      <p id="agenda-sotto"></p>
+    </div>
+    <div class="modale-corpo" id="agenda-corpo"></div>
+    <div class="modale-piede">
+      <button type="button" class="btn" data-azione="chiudi">Chiudi</button>
+    </div>
+  </div>
+</div>
+
+{% if utente_puo(INSERIRE_PAZIENTE) %}
+<div class="velo" id="velo-nuovo" data-finestra>
+  <div class="modale" style="max-width:560px">
+    <div class="modale-testa">
+      <h3>Nuovo paziente</h3>
+      <p id="nuovo-reparto-nome"></p>
+    </div>
+    <form method="post" action="{{ url_for('pazienti.nuovo') }}" novalidate>
+      {{ form_nuovo.hidden_tag() }}
+      <div class="modale-corpo">
+        <div class="riga-form">
+          <div class="campo">{{ form_nuovo.nome.label }}{{ form_nuovo.nome(maxlength=80) }}</div>
+          <div class="campo">{{ form_nuovo.cognome.label }}{{ form_nuovo.cognome(maxlength=80) }}</div>
+          <div class="campo">{{ form_nuovo.posto_letto.label }}{{ form_nuovo.posto_letto(maxlength=10) }}</div>
+          <div class="campo">{{ form_nuovo.data_arrivo.label }}{{ form_nuovo.data_arrivo(id="nuovo-arrivo") }}</div>
+          <div class="campo">
+            {{ form_nuovo.data_dimissione_presunta.label }}
+            {{ form_nuovo.data_dimissione_presunta(id="nuovo-dimissione") }}
+          </div>
+        </div>
+        <p class="requisiti">
+          La dimissione presunta è facoltativa e non può precedere l'arrivo.
+        </p>
+      </div>
+      <div class="modale-piede">
+        <button type="button" class="btn btn-secondario" data-azione="chiudi">Annulla</button>
+        {{ form_nuovo.invia(class="btn") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% if utente_puo(MODIFICARE_DIMISSIONE) %}
+<div class="velo" id="velo-dimissione" data-finestra>
+  <div class="modale" style="max-width:430px">
+    <div class="modale-testa">
+      <h3>Dimissione presunta</h3>
+      <p id="dimissione-nome"></p>
+    </div>
+    <form method="post" id="form-dimissione" novalidate>
+      {{ form_dimissione.hidden_tag() }}
+      <div class="modale-corpo">
+        <div class="campo">
+          {{ form_dimissione.data_dimissione_presunta.label }}
+          {{ form_dimissione.data_dimissione_presunta(id="dimissione-data") }}
+        </div>
+        <p class="requisiti">Lascia il campo vuoto per riportarla a «da definire».</p>
+      </div>
+      <div class="modale-piede">
+        <button type="button" class="btn btn-secondario" data-azione="chiudi">Annulla</button>
+        {{ form_dimissione.invia(class="btn") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% if utente_puo(SPOSTARE_PAZIENTE) %}
+<div class="velo" id="velo-sposta" data-finestra>
+  <div class="modale" style="max-width:470px">
+    <div class="modale-testa">
+      <h3>Sposta paziente</h3>
+      <p id="sposta-nome"></p>
+    </div>
+    <form method="post" id="form-sposta" novalidate>
+      {{ form_sposta.hidden_tag() }}
+      <div class="modale-corpo">
+        <div class="campo">{{ form_sposta.reparto_id.label }}{{ form_sposta.reparto_id(id="sposta-reparto") }}</div>
+        <div class="campo">{{ form_sposta.posto_letto.label }}{{ form_sposta.posto_letto(id="sposta-letto", maxlength=10) }}</div>
+        <p class="requisiti">
+          Note, checklist e date restano attaccate al paziente: cambia solo dove si trova.
+        </p>
+      </div>
+      <div class="modale-piede">
+        <button type="button" class="btn btn-secondario" data-azione="chiudi">Annulla</button>
+        {{ form_sposta.invia(class="btn") }}
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+
+{% if utente_puo(ELIMINARE_PAZIENTE) %}
+<div class="velo" id="velo-elimina" data-finestra>
+  <div class="modale" style="max-width:470px">
+    <div class="modale-testa"><h3>Eliminare il paziente?</h3></div>
+    <form method="post" id="form-elimina" novalidate>
+      {{ form_conferma.hidden_tag() }}
+      <div class="modale-corpo">
+        <p id="elimina-nome" class="conferma-soggetto"></p>
+        <p>
+          Sei sicuro di voler eliminare il paziente? Una volta eliminato non sarà
+          più possibile recuperare i dati.
+        </p>
+        <p><strong>Ricordati di stampare il foglio paziente prima.</strong></p>
+      </div>
+      <div class="modale-piede">
+        <button type="button" class="btn btn-secondario" data-azione="chiudi">Annulla</button>
+        <button type="submit" class="btn btn-pericolo">Elimina definitivamente</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

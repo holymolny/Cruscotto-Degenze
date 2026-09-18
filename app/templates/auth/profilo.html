@@ -1,0 +1,34 @@
+{# «Il mio profilo»: i propri dati e il cambio password. #}
+{% extends "base_app.html" %}
+{% set sezione = "profilo" %}
+
+{% block titolo %}Il mio profilo — Cruscotto Degenze{% endblock %}
+
+{% block contenuto %}
+<h2>Il mio profilo</h2>
+<p class="intro">I tuoi dati e la password di accesso.</p>
+
+<div class="pannello">
+  <h3>Dati dell'account</h3>
+  <table class="tab-dati">
+    <tr><th>Nome</th><td>{{ current_user.nome }}</td></tr>
+    <tr><th>Cognome</th><td>{{ current_user.cognome }}</td></tr>
+    <tr><th>Nome utente</th><td>{{ current_user.username }}</td></tr>
+    <tr><th>Ruolo</th><td>{{ current_user.etichetta_ruolo }}</td></tr>
+    <tr>
+      <th>Ultimo accesso</th>
+      <td>{{ momento_italiano(current_user.ultimo_accesso) }}</td>
+    </tr>
+  </table>
+  <p class="tenue nota-profilo">
+    Nome, cognome e ruolo li cambia l'amministratore. Se qualcosa non è
+    corretto, segnalalo a lui.
+  </p>
+</div>
+
+<div class="pannello">
+  <h3>Password</h3>
+  <p>Cambiala se pensi che qualcun altro possa conoscerla.</p>
+  <a class="btn" href="{{ url_for('auth.cambio_password') }}">Cambia password</a>
+</div>
+{% endblock %}

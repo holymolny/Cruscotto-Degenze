@@ -1,0 +1,13 @@
+{# I messaggi temporanei («Password aggiornata», «Sessione scaduta»).
+   Flask li mette da parte con flash() e li consegna una volta sola: dopo
+   essere stati mostrati spariscono, anche se si ricarica la pagina.
+   La seconda voce della coppia è la categoria, che qui diventa il colore. #}
+{% with messaggi = get_flashed_messages(with_categories=true) %}
+  {% if messaggi %}
+    <div class="messaggi">
+      {% for categoria, testo in messaggi %}
+        <p class="messaggio messaggio-{{ categoria }}">{{ testo }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}

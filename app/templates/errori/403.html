@@ -1,0 +1,19 @@
+{# Pagina mostrata a chi prova a fare qualcosa che il suo ruolo non consente.
+   Nessun dettaglio tecnico: all'utente non serve sapere quale permesso
+   mancava, e a un eventuale malintenzionato nemmeno. #}
+{% extends "base.html" %}
+
+{% block titolo %}Operazione non consentita — Cruscotto Degenze{% endblock %}
+
+{% block corpo %}
+<section class="schermo-intero">
+  <div class="card-login card-errore">
+    <h1>Operazione non consentita</h1>
+    <p>Il tuo ruolo non permette questa operazione.</p>
+    <p class="tenue">
+      Se pensi che si tratti di un errore, parlane con l'amministratore.
+    </p>
+    <a class="btn" href="{{ url_for('pazienti.home') }}">Torna al Cruscotto</a>
+  </div>
+</section>
+{% endblock %}

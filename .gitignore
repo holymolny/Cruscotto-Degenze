@@ -1,0 +1,26 @@
+# Ambiente virtuale: si ricrea con un comando, non va versionato.
+.venv/
+
+# Segreti: il .env NON va mai su Git. Il .env.example sì, perché non ha valori.
+.env
+
+# Database locale SQLite e i suoi file di appoggio.
+*.db
+*.db-journal
+*.sqlite3
+
+# File temporanei di Python.
+__pycache__/
+*.py[cod]
+
+# Log applicativi.
+log/
+*.log
+
+# Cache degli strumenti di sviluppo.
+.pytest_cache/
+.coverage
+
+# File di sistema.
+Thumbs.db
+desktop.ini

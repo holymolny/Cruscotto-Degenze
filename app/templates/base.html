@@ -1,0 +1,29 @@
+{# Impalcatura comune a tutte le pagine: intestazione HTML e poco altro.
+   Le pagine a schermo intero (login, cambio password, errori) estendono
+   direttamente questa. Le pagine interne al programma estendono invece
+   base_app.html, che ci aggiunge sopra la barra laterale. #}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block titolo %}Cruscotto Degenze{% endblock %}</title>
+  {# Il token CSRF anche qui, oltre che nei form: il JavaScript che salva la
+     gravità non passa da un form, ma deve comunque poterlo allegare. #}
+  <meta name="csrf-token" content="{{ csrf_token() }}">
+  {# url_for costruisce l'indirizzo del file: se un domani l'applicazione
+     finisse in una sottocartella, i collegamenti resterebbero giusti. #}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/stile.css') }}">
+</head>
+<body>
+{% block corpo %}{% endblock %}
+
+{# Avviso temporaneo in basso, usato dal JavaScript quando un salvataggio
+   immediato non riesce. #}
+<div id="avviso" role="status"></div>
+
+{# defer: il browser scarica il file subito ma lo esegue quando la pagina è
+   pronta, così il codice trova gli elementi che deve agganciare. #}
+<script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>

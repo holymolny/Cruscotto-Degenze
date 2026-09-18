@@ -1,0 +1,393 @@
+/* -----------------------------------------------------------------------
+   Cruscotto Degenze — foglio di stile.
+   I colori e le misure vengono da PrototipoCruscotto_Degenze_v5.html.
+   Definirli qui una volta sola come variabili evita di ritrovarsi con tre
+   verdi leggermente diversi sparsi per il programma.
+   ----------------------------------------------------------------------- */
+
+:root{
+  --pagina:#EEF0EE;
+  --superficie:#FFFFFF;
+  --inchiostro:#1B211F;
+  --tenue:#5C6763;
+  --bordo:#D5DAD7;
+  --accento:#0E5A55;
+  --accento-tenue:#E3EFEE;
+
+  /* L'azzurro del logo della Casa di Cura. Il valore viene dal file
+     originale convertito in sRGB: nel file, che è in CMYK da tipografia,
+     gli stessi pixel letti alla lettera darebbero un ciano elettrico. */
+  --azzurro-logo:#00A3D4;
+
+  /* Gravità del paziente */
+  --verde:#2F7D4F;
+  --giallo:#C98A12;
+  --rosso:#B3261E;
+  --grigio:#8B9591;
+
+  /* Colore della firma nelle note dell'Agenda, per ruolo */
+  --col-medico:#0E5A55;
+  --col-infermiere:#6B4FA0;
+  --col-admin:#8B9591;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--pagina);
+  color:var(--inchiostro);
+  /* Nessun font scaricato da internet: solo quelli già su Windows. */
+  font-family:-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:14px;
+  line-height:1.5;
+}
+
+button{font:inherit; cursor:pointer}
+input,select,textarea{font:inherit; color:inherit}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accento); outline-offset:2px}
+
+.tenue{color:var(--tenue)}
+
+/* ---------- PULSANTI ---------- */
+.btn{
+  display:inline-block;
+  border:1px solid var(--accento); background:var(--accento); color:#fff;
+  padding:10px 18px; border-radius:6px; font-weight:500;
+  text-decoration:none; text-align:center;
+}
+.btn:hover{background:#0B4A46}
+.btn-secondario{background:transparent; color:var(--accento)}
+.btn-secondario:hover{background:var(--accento-tenue)}
+.btn-pericolo{border-color:var(--rosso); background:transparent; color:var(--rosso)}
+.btn-pericolo:hover{background:#FBE9E8}
+.btn:disabled{opacity:.4; cursor:not-allowed}
+
+/* ---------- PAGINE A SCHERMO INTERO (login, cambio password, errori) ---------- */
+.schermo-intero{
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+}
+.card-login{
+  background:var(--superficie); border:1px solid var(--bordo); border-radius:12px;
+  padding:36px 40px; width:100%; max-width:560px;
+}
+.card-login h1{font-size:26px; font-weight:600; margin:0 0 2px; letter-spacing:-.01em}
+.card-login .sub{color:var(--tenue); margin:0 0 28px; font-size:13px}
+
+/* Testata della pagina di accesso: logo, titolo e sottotitolo centrati.
+   I campi del form restano allineati a sinistra, come si aspetta l'occhio. */
+.testata-login{text-align:center; margin-bottom:26px}
+.testata-login img{width:190px; height:auto; margin-bottom:16px}
+.testata-login h1{
+  margin-bottom:6px;
+  color:var(--azzurro-logo);
+  /* Il maiuscolo lo fa il CSS e non l'HTML: nel codice la scritta resta
+     "Cruscotto Degenze", quindi leggibile e ricercabile. */
+  text-transform:uppercase;
+  /* In maiuscolo le lettere hanno bisogno di respirare: la spaziatura
+     negativa usata per il minuscolo le farebbe sembrare accavallate. */
+  letter-spacing:.05em;
+  font-size:25px;
+}
+.testata-login .sub{margin:0}
+
+/* Pulsante centrato sotto i campi del form. */
+.azioni-centrate{text-align:center; margin-top:22px}
+.card-login form .btn{margin-right:8px}
+.card-errore h1{color:var(--accento)}
+.card-errore p{margin:0 0 10px}
+.card-errore .btn{margin-top:14px}
+
+.campo{margin-bottom:16px}
+.campo label{display:block; font-size:12px; color:var(--tenue); margin-bottom:5px}
+.campo input,.campo select{
+  width:100%; padding:10px 12px; border:1px solid var(--bordo);
+  border-radius:6px; background:var(--superficie);
+}
+.campo input:focus{outline:2px solid var(--accento); outline-offset:-1px; border-color:var(--accento)}
+.errore-campo{color:var(--rosso); font-size:12px; margin:5px 0 0}
+.requisiti{font-size:12px; color:var(--tenue); margin:0 0 18px}
+.nota-accesso{
+  margin:26px 0 0; padding-top:18px; border-top:1px solid var(--bordo);
+  font-size:12px; color:var(--tenue); text-align:center;
+}
+.nota-accesso p{margin:0 0 6px}
+.nota-accesso p:last-child{margin-bottom:0}
+.nota-accesso strong{color:var(--inchiostro)}
+
+/* ---------- MESSAGGI ---------- */
+.messaggi{margin:0 0 18px}
+.messaggio{
+  margin:0 0 8px; padding:10px 14px; border-radius:6px;
+  font-size:13px; border:1px solid var(--bordo); background:var(--superficie);
+}
+.messaggio-errore{color:var(--rosso); border-color:#E7C4C1; background:#FBE9E8}
+.messaggio-successo{color:var(--verde); border-color:#C3DDCC; background:#EAF4EE}
+.messaggio-avviso{color:var(--accento); border-color:#BFD9D7; background:var(--accento-tenue)}
+
+/* ---------- IMPALCATURA DEL PROGRAMMA ---------- */
+.app{display:flex; min-height:100vh}
+nav{
+  width:236px; flex:0 0 236px; background:var(--superficie);
+  border-right:1px solid var(--bordo); padding:22px 16px;
+  display:flex; flex-direction:column;
+}
+/* Marchio in cima alla barra laterale: stemma sopra, nome sotto.
+   Lo stemma sta sopra e non a fianco perché la barra è larga 236px: messo
+   accanto, «Cruscotto Degenze» andrebbe a capo. */
+.marchio{padding:0 10px 18px}
+.marchio img{display:block; width:52px; height:auto; margin-bottom:10px}
+.marchio-testo{
+  font-size:14px; font-weight:600; line-height:1.25;
+  color:var(--azzurro-logo);
+  text-transform:uppercase;
+  /* In maiuscolo le lettere hanno bisogno di respirare. Il corpo scende da
+     16 a 14px perché «CRUSCOTTO DEGENZE» in maiuscolo è più largo della
+     stessa scritta in minuscolo, e la barra è larga solo 236px: a 16px
+     andrebbe a capo. */
+  letter-spacing:.04em;
+}
+.marchio-testo span{
+  display:block; font-size:11px; font-weight:400; color:var(--tenue);
+  margin-top:3px;
+  /* Il sottotitolo resta com'era: senza questo erediterebbe il maiuscolo
+     e l'azzurro dal blocco che lo contiene. */
+  text-transform:none;
+  letter-spacing:normal;
+}
+nav a{
+  display:block; padding:9px 10px; border-radius:6px; color:var(--inchiostro);
+  text-decoration:none; margin-bottom:2px;
+}
+nav a:hover{background:var(--pagina)}
+nav a.corrente{background:var(--accento-tenue); color:var(--accento); font-weight:500}
+nav a.disattivata{color:var(--grigio); cursor:not-allowed}
+nav a.disattivata:hover{background:transparent}
+.spazio{flex:1}
+.chi-sono{border-top:1px solid var(--bordo); padding:16px 10px 6px}
+.chi-sono strong{display:block; font-weight:500}
+.chi-sono .ruolo{font-size:12px; color:var(--tenue)}
+
+main{flex:1; padding:26px 30px 60px; min-width:0}
+h2{font-size:20px; font-weight:600; margin:0 0 4px; letter-spacing:-.01em}
+.intro{color:var(--tenue); margin:0 0 22px; font-size:13px}
+
+/* ---------- REPARTO ---------- */
+.reparto{
+  background:var(--superficie); border:1px solid var(--bordo);
+  border-radius:12px; margin-bottom:22px; overflow:hidden;
+}
+.reparto-testa{
+  display:flex; align-items:center; gap:12px; padding:14px 18px;
+  border-bottom:1px solid var(--bordo); flex-wrap:wrap;
+}
+.reparto-testa h3{margin:0; font-size:15px; font-weight:600}
+.conteggio{font-size:12px; color:var(--tenue)}
+.reparto-testa .destra{margin-left:auto; display:flex; gap:8px}
+.reparto-testa .destra button{padding:6px 12px; font-size:13px}
+.vuoto{padding:26px 18px; color:var(--tenue); font-size:13px; margin:0}
+
+/* ---------- TABELLE ---------- */
+.tabella-scorre{overflow-x:auto}
+table{border-collapse:collapse; width:100%}
+th{
+  height:40px; padding:6px 14px; font-size:11px; font-weight:500; color:var(--tenue);
+  text-align:left; border-bottom:1px solid var(--bordo); white-space:nowrap;
+}
+td{
+  height:48px; padding:0 14px; border-bottom:1px solid var(--bordo);
+  vertical-align:middle; white-space:nowrap;
+}
+tr:last-child td{border-bottom:none}
+.da-definire{color:var(--tenue); font-style:italic}
+
+.col-paziente{width:26%}
+.col-letto{width:9%}
+.col-data{width:13%}
+.col-gravita{width:8%}
+.col-azioni{text-align:right}
+
+/* La data di dimissione è un pulsante, ma deve sembrare testo finché non ci
+   si passa sopra: in tabella un pulsante vero e proprio farebbe rumore. */
+.data-modificabile{
+  background:none; border:1px solid transparent; border-radius:5px;
+  padding:3px 6px; margin:-3px -6px; color:inherit; text-align:left;
+}
+.data-modificabile:hover{border-color:var(--bordo); background:var(--pagina)}
+
+.azioni{display:flex; gap:6px; justify-content:flex-end}
+.azioni button{
+  border:1px solid var(--bordo); background:transparent; color:var(--tenue);
+  border-radius:5px; padding:5px 10px; font-size:12px;
+}
+.azioni button:hover:not(:disabled){border-color:var(--accento); color:var(--accento)}
+.azioni button:disabled{opacity:.45; cursor:not-allowed}
+.azioni button.agenda{color:var(--accento); border-color:var(--accento); font-weight:500}
+.azioni button.agenda:disabled{color:var(--tenue); border-color:var(--bordo)}
+.azioni button.agenda .n{
+  display:inline-block; min-width:18px; margin-left:4px; padding:0 5px;
+  border-radius:9px; background:var(--accento-tenue); font-size:11px; text-align:center;
+}
+.azioni button.via:hover:not(:disabled){border-color:var(--rosso); color:var(--rosso)}
+
+/* ---------- FINESTRE ---------- */
+.velo{
+  position:fixed; inset:0; background:rgba(20,28,26,.45);
+  display:none; align-items:center; justify-content:center; padding:24px; z-index:50;
+}
+.velo.aperto{display:flex}
+.modale{
+  background:var(--superficie); border-radius:12px; width:100%; max-width:660px;
+  max-height:88vh; display:flex; flex-direction:column;
+}
+.modale form{display:flex; flex-direction:column; min-height:0}
+.modale-testa{padding:20px 24px 14px; border-bottom:1px solid var(--bordo)}
+.modale-testa h3{margin:0; font-size:17px; font-weight:600}
+.modale-testa p{margin:3px 0 0; font-size:13px; color:var(--tenue)}
+.modale-corpo{padding:20px 24px; overflow-y:auto}
+.modale-corpo p{margin:0 0 10px}
+.modale-corpo .requisiti{margin:14px 0 0}
+.modale-piede{
+  padding:14px 24px; border-top:1px solid var(--bordo);
+  display:flex; gap:10px; justify-content:flex-end;
+}
+.conferma-soggetto{font-weight:600}
+.riga-form{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.riga-form .campo{margin-bottom:0}
+
+/* ---------- AGENDA ---------- */
+textarea{
+  width:100%; min-height:88px; padding:10px 12px; border:1px solid var(--bordo);
+  border-radius:6px; resize:vertical; font-family:inherit;
+}
+textarea:focus{outline:2px solid var(--accento); outline-offset:-1px}
+
+.composizione{margin-bottom:22px}
+.composizione .firma{font-size:12px; color:var(--tenue); margin:0 0 6px}
+.bottoni-composizione{display:flex; justify-content:flex-end; margin-top:8px}
+.bottoni-composizione .btn{padding:7px 16px; font-size:13px}
+.solo-lettura{
+  background:var(--pagina); border-radius:6px; padding:12px 14px;
+  font-size:13px; color:var(--tenue); margin:0 0 22px;
+}
+.vuoto-agenda{color:var(--tenue); font-size:13px; margin:0}
+
+.giorno{
+  font-size:12px; font-weight:600; color:var(--tenue);
+  margin:18px 0 8px; padding-bottom:4px; border-bottom:1px solid var(--bordo);
+}
+.nota{border-left:3px solid var(--col-admin); padding:4px 0 4px 12px; margin-bottom:14px}
+.nota[data-ruolo="MEDICO"]{border-left-color:var(--col-medico)}
+.nota[data-ruolo="INFERMIERE"]{border-left-color:var(--col-infermiere)}
+.nota-testa{display:flex; align-items:baseline; gap:10px; flex-wrap:wrap; margin-bottom:3px}
+.nota-autore{font-weight:600; font-size:13px}
+.nota-autore .ruolo{font-weight:500}
+.nota[data-ruolo="MEDICO"] .ruolo{color:var(--col-medico)}
+.nota[data-ruolo="INFERMIERE"] .ruolo{color:var(--col-infermiere)}
+.nota[data-ruolo="ADMIN"] .ruolo{color:var(--tenue)}
+.nota-data{font-size:12px; color:var(--tenue)}
+.nota-modificata{font-size:12px; color:var(--tenue); font-style:italic}
+.nota-azioni{margin-left:auto; display:flex; gap:4px}
+.nota-azioni button{
+  background:none; border:none; color:var(--tenue); font-size:12px;
+  padding:2px 6px; border-radius:4px;
+}
+.nota-azioni button:hover{background:var(--pagina); color:var(--accento)}
+.nota-azioni button.via:hover{color:var(--rosso); background:#FBE9E8}
+/* pre-wrap conserva gli a capo scritti dall'utente senza trasformarli in
+   <br>, che andrebbero disinnescati uno per uno. */
+.nota p{margin:0; white-space:pre-wrap}
+.nota .modifica-box textarea{min-height:70px; margin-top:4px}
+.nota .modifica-box .bottoni,
+.nota .conferma-inline .bottoni{display:flex; gap:8px; margin-top:6px}
+.nota .modifica-box .bottoni button,
+.nota .conferma-inline .bottoni button{padding:5px 12px; font-size:13px}
+.conferma-inline{
+  margin-top:8px; padding:10px 12px; border-radius:6px;
+  background:#FBE9E8; border:1px solid #E7C4C1;
+}
+.conferma-inline p{margin:0; font-size:13px}
+
+/* ---------- CHECKLIST ---------- */
+.checklist{border:1px solid var(--bordo); border-radius:8px; margin-bottom:22px}
+.checklist summary{
+  display:flex; align-items:center; gap:10px; padding:10px 14px;
+  cursor:pointer; list-style:none; font-weight:600; font-size:14px;
+}
+.checklist summary::-webkit-details-marker{display:none}
+.checklist summary::before{content:"\25B8"; color:var(--tenue); font-size:12px}
+.checklist[open] summary::before{content:"\25BE"}
+.checklist summary:focus-visible{outline:2px solid var(--accento); outline-offset:-2px; border-radius:8px}
+.contatore{
+  font-size:12px; font-weight:600; color:var(--accento); background:var(--accento-tenue);
+  padding:2px 9px; border-radius:20px;
+  /* Le cifre restano allineate mentre il contatore cambia, così il numero
+     non "balla" a ogni spunta. */
+  font-variant-numeric:tabular-nums;
+}
+.contatore.completa{color:#fff; background:var(--verde)}
+.barra{
+  flex:1; max-width:180px; height:6px; border-radius:3px;
+  background:var(--pagina); overflow:hidden; margin-left:auto;
+}
+.barra i{display:block; height:100%; background:var(--accento); transition:width .15s}
+.checklist .voci{
+  display:grid; grid-template-columns:1fr 1fr; gap:0 18px;
+  padding:4px 14px 10px; border-top:1px solid var(--bordo);
+}
+.voce-check{
+  display:flex; align-items:center; gap:10px; padding:7px 2px;
+  border-bottom:1px solid #EDF0EE; font-size:13px; cursor:pointer;
+}
+.voce-check input{width:17px; height:17px; margin:0; accent-color:var(--accento); flex:0 0 auto; cursor:inherit}
+.voce-check.fatta span{color:var(--tenue)}
+.voce-check.bloccata{cursor:default}
+.checklist .nota-lettura{padding:0 14px 10px; font-size:12px; color:var(--tenue); margin:0}
+
+/* ---------- AVVISO TEMPORANEO ---------- */
+#avviso{
+  position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
+  background:var(--inchiostro); color:#fff; padding:10px 16px; border-radius:8px;
+  font-size:13px; z-index:70; display:none; max-width:90vw;
+}
+#avviso.visibile{display:block}
+
+.tab-dati th{width:170px; height:34px; font-size:13px; color:var(--tenue); font-weight:400}
+.tab-dati td{height:34px; font-size:13px}
+
+/* ---------- GRAVITÀ ---------- */
+.pallino{
+  width:16px; height:16px; border-radius:50%; border:none; padding:0;
+  display:inline-block; vertical-align:-3px;
+}
+.pallino[data-g="rosso"]{background:var(--rosso)}
+.pallino[data-g="giallo"]{background:var(--giallo)}
+.pallino[data-g="verde"]{background:var(--verde)}
+.pallino[data-g="nv"]{background:transparent; border:2px dashed var(--grigio)}
+.pallino:disabled{cursor:default}
+.legenda{
+  display:flex; gap:18px; align-items:center; font-size:12px;
+  color:var(--tenue); margin-bottom:18px; flex-wrap:wrap;
+}
+.legenda span{display:flex; gap:6px; align-items:center}
+
+/* ---------- PANNELLI ---------- */
+.pannello{
+  background:var(--superficie); border:1px solid var(--bordo);
+  border-radius:12px; padding:20px 22px; margin-bottom:20px;
+}
+.pannello h3{margin:0 0 14px; font-size:15px; font-weight:600}
+.pannello p{margin:0 0 14px}
+.nota-profilo{margin:14px 0 0; font-size:12px}
+
+/* ---------- SCHERMI PICCOLI ---------- */
+@media (max-width:760px){
+  .app{flex-direction:column}
+  nav{width:auto; flex:none; border-right:none; border-bottom:1px solid var(--bordo)}
+  main{padding:20px 16px 40px}
+  .card-login{padding:28px 22px}
+  .riga-form{grid-template-columns:1fr}
+  .checklist .voci{grid-template-columns:1fr}
+}

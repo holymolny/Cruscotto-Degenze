@@ -1,0 +1,48 @@
+{# Le pagine interne al programma: barra laterale a sinistra, contenuto a
+   destra. Riproduce la struttura del prototipo v5. #}
+{% extends "base.html" %}
+
+{% block corpo %}
+<div class="app">
+  <nav>
+    <div class="marchio">
+      {# alt vuoto: lo stemma è decorativo, il nome della struttura è già
+         scritto qui sotto. Un lettore di schermo che leggesse anche
+         l'immagine ripeterebbe due volte la stessa cosa. #}
+      <img src="{{ url_for('static', filename='img/logo-emblema.png') }}"
+           alt="" width="52" height="34">
+      <div class="marchio-testo">
+        Cruscotto Degenze
+        <span>{{ config.NOME_STRUTTURA.replace('Casa di Cura ', '') }}</span>
+      </div>
+    </div>
+
+    <a href="{{ url_for('pazienti.home') }}"
+       class="{{ 'corrente' if sezione == 'pazienti' }}">Pazienti</a>
+
+    {# La voce «Gestione utenti» compare solo a chi ha il permesso. Ma
+       nasconderla non basta: la route dietro sarà protetta da
+       @richiede_permesso, che risponde 403 a chiunque provi a raggiungerla
+       scrivendo l'indirizzo a mano.
+       Si attiva al passo 8, quando l'area utenti esisterà davvero. #}
+    {% if utente_puo(GESTIRE_UTENTI) %}
+      <a class="disattivata" title="Disponibile dal passo 8">Gestione utenti</a>
+    {% endif %}
+
+    <div class="spazio"></div>
+
+    <div class="chi-sono">
+      <strong>{{ current_user.nome_completo }}</strong>
+      <div class="ruolo">{{ current_user.etichetta_ruolo }}</div>
+    </div>
+    <a href="{{ url_for('auth.profilo') }}"
+       class="{{ 'corrente' if sezione == 'profilo' }}">Il mio profilo</a>
+    <a href="{{ url_for('auth.logout') }}">Esci</a>
+  </nav>
+
+  <main>
+    {% include "_messaggi.html" %}
+    {% block contenuto %}{% endblock %}
+  </main>
+</div>
+{% endblock %}

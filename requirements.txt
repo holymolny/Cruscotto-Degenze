@@ -1,0 +1,31 @@
+# Librerie del Cruscotto Degenze, con versione esatta.
+# Le versioni sono bloccate di proposito: sulla macchina virtuale devono
+# essere installate le stesse identiche di qui, altrimenti un aggiornamento
+# improvviso potrebbe cambiare il comportamento del programma in reparto.
+#
+# Per installarle:  pip install -r requirements.txt
+
+# --- Applicazione web ---
+Flask==3.1.3
+Flask-SQLAlchemy==3.1.1
+Flask-Migrate==4.1.0
+Flask-Login==0.6.3
+Flask-WTF==1.3.0
+
+# --- Configurazione ---
+python-dotenv==1.2.3
+
+# --- PDF ---
+reportlab==5.0.1
+
+# --- Fusi orari (su Windows non sono inclusi in Python) ---
+tzdata==2026.4
+
+# --- Server di produzione ---
+waitress==3.0.2
+
+# --- Test ---
+pytest==9.1.1
+
+# --- Fase 2, macchina virtuale: da scommentare solo là ---
+# pyodbc==5.2.0

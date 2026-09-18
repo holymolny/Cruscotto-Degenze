@@ -1,0 +1,61 @@
+{# Pagina di accesso. Riproduce la card centrata del prototipo v5. #}
+{% extends "base.html" %}
+
+{% block titolo %}Accedi — Cruscotto Degenze{% endblock %}
+
+{% block corpo %}
+<section class="schermo-intero">
+  <div class="card-login">
+    {# width e height sono scritti nell'HTML di proposito: il browser sa quanto
+       spazio riservare prima ancora di aver scaricato l'immagine, e la pagina
+       non "salta" mentre si carica. #}
+    <div class="testata-login">
+      <img src="{{ url_for('static', filename='img/logo-casa-cura.png') }}"
+           alt="{{ config.NOME_STRUTTURA }}" width="190" height="146">
+      <h1>Cruscotto Degenze</h1>
+      <p class="sub">Accesso riservato al personale</p>
+    </div>
+
+    {% include "_messaggi.html" %}
+
+    {# novalidate: i controlli li fa il server, così il messaggio è sempre in
+       italiano e identico su qualunque browser. #}
+    <form method="post" novalidate>
+      {# Senza questa riga il form non contiene il token CSRF e il server
+         rifiuta l'invio. #}
+      {{ form.hidden_tag() }}
+
+      <div class="campo">
+        {{ form.username.label }}
+        {{ form.username(autocomplete="username", autofocus=true) }}
+        {% for errore in form.username.errors %}
+          <p class="errore-campo">{{ errore }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="campo">
+        {{ form.password.label }}
+        {{ form.password(autocomplete="current-password") }}
+        {% for errore in form.password.errors %}
+          <p class="errore-campo">{{ errore }}</p>
+        {% endfor %}
+      </div>
+
+      <div class="azioni-centrate">
+        {{ form.invia(class="btn") }}
+      </div>
+    </form>
+
+    <div class="nota-accesso">
+      <p>
+        Gli account vengono creati dall'amministratore (Micky) —
+        per eventuali problemi contattare <strong>interno 286</strong>.
+      </p>
+      <p>
+        Dopo {{ config.TENTATIVI_MASSIMI }} tentativi falliti l'accesso resta
+        bloccato per {{ config.MINUTI_BLOCCO }} minuti.
+      </p>
+    </div>
+  </div>
+</section>
+{% endblock %}
