@@ -390,6 +390,42 @@ textarea:focus{outline:2px solid var(--accento); outline-offset:-1px}
 .pannello p{margin:0 0 14px}
 .nota-profilo{margin:14px 0 0; font-size:12px}
 
+/* ---------- GESTIONE UTENTI ---------- */
+.col-persona{width:24%}
+.col-username{width:16%}
+.col-ruolo{width:18%}
+.col-stato{width:12%}
+
+/* Una riga spenta resta leggibile ma si fa da parte: chi scorre l'elenco
+   cerca quasi sempre qualcuno che lavora ancora qui. */
+.riga-spenta td{color:var(--tenue)}
+
+.sei-tu{
+  margin-left:7px; padding:1px 7px; border-radius:9px;
+  background:var(--accento-tenue); color:var(--accento);
+  font-size:11px; vertical-align:middle;
+}
+
+.targhetta{
+  display:inline-block; padding:2px 9px; border-radius:9px;
+  font-size:11px; line-height:1.6; white-space:nowrap;
+}
+/* Il colore da solo non basta a dire lo stato: chi non distingue il verde dal
+   rosso legge comunque la parola scritta dentro la targhetta. */
+.targhetta.attiva{background:#E6F2EA; color:var(--verde)}
+.targhetta.spenta{background:var(--pagina); color:var(--tenue)}
+.targhetta.bloccata{background:#FBE9E8; color:var(--rosso)}
+
+/* Riattiva e Sblocca sono form veri, non finestre: cambiano qualcosa, quindi
+   vogliono il token CSRF, ma non hanno niente da chiedere prima. Il form non
+   deve però rompere l'allineamento della fila di pulsanti. */
+.azione-inline{display:inline-flex; margin:0}
+
+.requisiti code{
+  background:var(--pagina); border:1px solid var(--bordo); border-radius:4px;
+  padding:1px 5px; font-size:12px;
+}
+
 /* ---------- SCHERMI PICCOLI ---------- */
 @media (max-width:760px){
   .app{flex-direction:column}

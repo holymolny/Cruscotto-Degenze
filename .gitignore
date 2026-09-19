@@ -21,6 +21,11 @@ log/
 .pytest_cache/
 .coverage
 
+# Il setup .exe: pesa qualche MB, cambia a ogni compilazione e si ricostruisce
+# in un minuto con Installer\Compila.ps1. Versionare il sorgente, non il
+# prodotto.
+Installer/Output/
+
 # File di sistema.
 Thumbs.db
 desktop.ini

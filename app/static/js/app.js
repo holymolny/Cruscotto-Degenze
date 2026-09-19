@@ -109,6 +109,45 @@
       cambiaGravita(bottone);
     },
 
+    /* ---- Gestione utenti ---- */
+
+    "apri-nuovo-utente": function () {
+      // Nessun dato da precaricare: il form nasce vuoto.
+      apri("velo-nuovo-utente");
+    },
+
+    "apri-modifica-utente": function (bottone) {
+      var modulo = document.getElementById("form-modifica-utente");
+      modulo.action = "/utenti/" + bottone.dataset.utente + "/modifica";
+      document.getElementById("modifica-utente-nome").textContent =
+        bottone.dataset.etichetta;
+
+      document.getElementById("modifica-utente-campo-nome").value = bottone.dataset.nome;
+      document.getElementById("modifica-utente-campo-cognome").value = bottone.dataset.cognome;
+      document.getElementById("modifica-utente-campo-ruolo").value = bottone.dataset.ruolo;
+      apri("velo-modifica-utente");
+    },
+
+    "apri-password-utente": function (bottone) {
+      var modulo = document.getElementById("form-password-utente");
+      modulo.action = "/utenti/" + bottone.dataset.utente + "/password";
+      document.getElementById("password-utente-nome").textContent =
+        bottone.dataset.etichetta;
+
+      // Svuotato a ogni apertura: senza, riaprendo la finestra per un'altra
+      // persona si troverebbe dentro la password digitata per la precedente.
+      modulo.reset();
+      apri("velo-password-utente");
+    },
+
+    "apri-disattiva-utente": function (bottone) {
+      var modulo = document.getElementById("form-disattiva-utente");
+      modulo.action = "/utenti/" + bottone.dataset.utente + "/disattiva";
+      document.getElementById("disattiva-utente-nome").textContent =
+        bottone.dataset.etichetta;
+      apri("velo-disattiva-utente");
+    },
+
     "apri-agenda": function (bottone) {
       pazienteAperto = bottone.dataset.paziente;
       document.getElementById("agenda-titolo").textContent = bottone.dataset.nome;

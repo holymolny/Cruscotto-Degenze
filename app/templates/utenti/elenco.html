@@ -1,0 +1,258 @@
+{# «Gestione utenti»: l'elenco degli account e le azioni su ciascuno.
+
+   Come nella home, qui dentro non c'è nemmeno un onclick: la
+   Content-Security-Policy consente solo codice servito da noi, e un onclick
+   scritto nella pagina verrebbe bloccato dal browser. I comportamenti sono
+   agganciati in app.js attraverso gli attributi data-*. #}
+{% extends "base_app.html" %}
+{% set sezione = "utenti" %}
+
+{% block titolo %}Gestione utenti — Cruscotto Degenze{% endblock %}
+
+{% block contenuto %}
+<h2>Gestione utenti</h2>
+<p class="intro">
+  Chi può entrare nel Cruscotto e con quale ruolo. Gli account non si
+  cancellano: si disattivano, così le note conservano la firma di chi le ha
+  scritte.
+</p>
+
+<section class="reparto">
+  <div class="reparto-testa">
+    <h3>Account</h3>
+    <span class="conteggio">
+      {% if utenti|length == 1 %}1 utente{% else %}{{ utenti|length }} utenti{% endif %}
+    </span>
+    <div class="destra">
+      <button type="button" class="btn btn-secondario"
+              data-azione="apri-nuovo-utente">Nuovo utente</button>
+    </div>
+  </div>
+
+  <div class="tabella-scorre">
+    <table>
+      <thead>
+        <tr>
+          <th class="col-persona">Persona</th>
+          <th class="col-username">Nome utente</th>
+          <th class="col-ruolo">Ruolo</th>
+          <th class="col-stato">Stato</th>
+          <th class="col-data">Ultimo accesso</th>
+          <th class="col-azioni">Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for utente in utenti %}
+          {# «Sono io» e «è l'ultimo amministratore» sono i due casi in cui
+             certe azioni non si possono fare. Li calcoliamo una volta sola
+             qui, invece di ripetere la condizione su ogni pulsante. #}
+          {% set sono_io = utente.id == current_user.id %}
+          {% set ultimo_admin = utente.ruolo == ruolo_admin and utente.attivo and admin_attivi == 1 %}
+          <tr class="{{ 'riga-spenta' if not utente.attivo }}">
+            <td>
+              {{ utente.nome_completo }}
+              {% if sono_io %}<span class="sei-tu">sei tu</span>{% endif %}
+            </td>
+            <td>{{ utente.username }}</td>
+            <td>{{ utente.etichetta_ruolo }}</td>
+            <td>
+              {% if not utente.attivo %}
+                <span class="targhetta spenta">Disattivato</span>
+              {% elif utente.id in bloccati %}
+                <span class="targhetta bloccata">Bloccato</span>
+              {% else %}
+                <span class="targhetta attiva">Attivo</span>
+              {% endif %}
+            </td>
+            <td class="{{ 'da-definire' if not utente.ultimo_accesso }}">
+              {{ momento_italiano(utente.ultimo_accesso, 'mai') }}
+            </td>
+            <td>
+              <div class="azioni">
+                <button type="button"
+                        data-azione="apri-modifica-utente"
+                        data-utente="{{ utente.id }}"
+                        data-nome="{{ utente.nome }}"
+                        data-cognome="{{ utente.cognome }}"
+                        data-ruolo="{{ utente.ruolo }}"
+                        data-etichetta="{{ utente.nome_completo }} ({{ utente.username }})"
+                        >Modifica</button>
+
+                <button type="button"
+                        data-azione="apri-password-utente"
+                        data-utente="{{ utente.id }}"
+                        data-etichetta="{{ utente.nome_completo }} ({{ utente.username }})"
+                        >Password</button>
+
+                {% if utente.id in bloccati %}
+                  <form method="post" class="azione-inline"
+                        action="{{ url_for('utenti.sblocca', utente_id=utente.id) }}">
+                    {{ form_conferma.hidden_tag() }}
+                    <button type="submit">Sblocca</button>
+                  </form>
+                {% endif %}
+
+                {% if utente.attivo %}
+                  <button type="button" class="via"
+                          data-azione="apri-disattiva-utente"
+                          data-utente="{{ utente.id }}"
+                          data-etichetta="{{ utente.nome_completo }} ({{ utente.username }})"
+                          {% if sono_io or ultimo_admin %}disabled
+                            title="{% if sono_io %}Non puoi disattivare il tuo stesso account{% else %}È l'unico amministratore attivo{% endif %}"
+                          {% endif %}>Disattiva</button>
+                {% else %}
+                  <form method="post" class="azione-inline"
+                        action="{{ url_for('utenti.riattiva', utente_id=utente.id) }}">
+                    {{ form_conferma.hidden_tag() }}
+                    <button type="submit">Riattiva</button>
+                  </form>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<p class="requisiti">
+  Il primo amministratore non si crea da qui, ma dal terminale con
+  <code>flask crea-admin</code>: per usare questa pagina bisogna già essere
+  entrati. Per lo stesso motivo l'ultimo amministratore attivo non si può né
+  disattivare né retrocedere di ruolo.
+</p>
+
+{# ---------------------------------------------------------------- FINESTRE #}
+
+<div class="velo" id="velo-nuovo-utente" data-finestra>
+  <div class="modale" style="max-width:560px">
+    <div class="modale-testa">
+      <h3>Nuovo utente</h3>
+      <p>L'account sarà subito attivo.</p>
+    </div>
+    <form method="post" action="{{ url_for('utenti.nuovo') }}" novalidate>
+      {{ form_nuovo.hidden_tag() }}
+      <div class="modale-corpo">
+        <div class="riga-form">
+          <div class="campo">{{ form_nuovo.nome.label }}{{ form_nuovo.nome(maxlength=80) }}</div>
+          <div class="campo">{{ form_nuovo.cognome.label }}{{ form_nuovo.cognome(maxlength=80) }}</div>
+          <div class="campo">
+            {{ form_nuovo.username.label }}
+            {{ form_nuovo.username(maxlength=50, autocomplete="off") }}
+          </div>
+          <div class="campo">{{ form_nuovo.ruolo.label }}{{ form_nuovo.ruolo() }}</div>
+          <div class="campo">
+            {{ form_nuovo.password.label }}
+            {{ form_nuovo.password(autocomplete="new-password") }}
+          </div>
+          <div class="campo">
+            {{ form_nuovo.conferma_password.label }}
+            {{ form_nuovo.conferma_password(autocomplete="new-password") }}
+          </div>
+        </div>
+        <p class="requisiti">
+          Il nome utente è quello che scriverà per entrare: minuscolo, senza
+          spazi, di solito l'iniziale del nome seguita dal cognome (mrossi).
+          La password deve avere almeno 8 caratteri, con una lettera e un
+          numero; la sceglie lei al primo accesso, quindi questa serve solo
+          per farcelo arrivare.
+        </p>
+      </div>
+      <div class="modale-piede">
+        <button type="button" class="btn btn-secondario" data-azione="chiudi">Annulla</button>
+        {{ form_nuovo.invia(class="btn") }}
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="velo" id="velo-modifica-utente" data-finestra>
+  <div class="modale" style="max-width:520px">
+    <div class="modale-testa">
+      <h3>Modifica utente</h3>
+      <p id="modifica-utente-nome"></p>
+    </div>
+    <form method="post" id="form-modifica-utente" novalidate>
+      {{ form_modifica.hidden_tag() }}
+      <div class="modale-corpo">
+        <div class="riga-form">
+          <div class="campo">
+            {{ form_modifica.nome.label }}
+            {{ form_modifica.nome(id="modifica-utente-campo-nome", maxlength=80) }}
+          </div>
+          <div class="campo">
+            {{ form_modifica.cognome.label }}
+            {{ form_modifica.cognome(id="modifica-utente-campo-cognome", maxlength=80) }}
+          </div>
+          <div class="campo">
+            {{ form_modifica.ruolo.label }}
+            {{ form_modifica.ruolo(id="modifica-utente-campo-ruolo") }}
+          </div>
+        </div>
+        <p class="requisiti">
+          Il nome utente non si cambia: compare nel registro accessi di tutte
+          le operazioni già fatte, e cambiarlo renderebbe quelle righe
+          difficili da attribuire.
+        </p>
+      </div>
+      <div class="modale-piede">
+        <button type="button" class="btn btn-secondario" data-azione="chiudi">Annulla</button>
+        {{ form_modifica.invia(class="btn") }}
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="velo" id="velo-password-utente" data-finestra>
+  <div class="modale" style="max-width:470px">
+    <div class="modale-testa">
+      <h3>Reimposta password</h3>
+      <p id="password-utente-nome"></p>
+    </div>
+    <form method="post" id="form-password-utente" novalidate>
+      {{ form_password.hidden_tag() }}
+      <div class="modale-corpo">
+        <div class="campo">
+          {{ form_password.password.label }}
+          {{ form_password.password(id="password-utente-campo", autocomplete="new-password") }}
+        </div>
+        <div class="campo">
+          {{ form_password.conferma_password.label }}
+          {{ form_password.conferma_password(autocomplete="new-password") }}
+        </div>
+        <p class="requisiti">
+          Comunicagliela a voce: al primo accesso dovrà sostituirla con una
+          che sappia solo lei. La vecchia password non è recuperabile,
+          nemmeno da qui: nel database c'è soltanto la sua impronta.
+        </p>
+      </div>
+      <div class="modale-piede">
+        <button type="button" class="btn btn-secondario" data-azione="chiudi">Annulla</button>
+        {{ form_password.invia(class="btn") }}
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="velo" id="velo-disattiva-utente" data-finestra>
+  <div class="modale" style="max-width:470px">
+    <div class="modale-testa"><h3>Disattivare l'utente?</h3></div>
+    <form method="post" id="form-disattiva-utente" novalidate>
+      {{ form_conferma.hidden_tag() }}
+      <div class="modale-corpo">
+        <p id="disattiva-utente-nome" class="conferma-soggetto"></p>
+        <p>
+          Non potrà più entrare nel Cruscotto. Le note che ha scritto e i
+          pazienti che ha inserito restano dove sono, con la sua firma.
+        </p>
+        <p>Si può riattivare in qualunque momento da questa stessa pagina.</p>
+      </div>
+      <div class="modale-piede">
+        <button type="button" class="btn btn-secondario" data-azione="chiudi">Annulla</button>
+        <button type="submit" class="btn btn-pericolo">Disattiva</button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

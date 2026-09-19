@@ -22,10 +22,27 @@ degenza e la dimissione.
 | 5 | Agenda delle note | ✅ fatto |
 | 6 | Checklist di dimissione | ✅ fatto |
 | 7 | PDF del paziente | ✅ fatto |
-| 8 | Gestione utenti e registro accessi | da fare |
+| 8 | Gestione utenti | ✅ fatto |
+| 8b | Registro accessi (consultazione) | da fare |
 | 9 | Test automatici e rifinitura grafica | da fare |
 
+Gli eventi del registro accessi vengono **già scritti** da ogni operazione
+(vedi [`app/audit.py`](app/audit.py)): manca solo la pagina per consultarli.
+
 ## Installazione (Windows)
+
+### Con l'installer, se il PC deve solo usare il programma
+
+`Installer\Output\CruscottoDegenze-Setup.exe` installa tutto con un doppio
+clic: Python compreso, se non c'è. Chiede dove installare e i dati del primo
+amministratore, poi lascia un collegamento sul Desktop che accende il
+Cruscotto e apre il browser. Serve la connessione a internet solo durante
+l'installazione.
+
+Dettagli, ricompilazione del setup e cosa fare se si interrompe:
+[`Installer/LEGGIMI.md`](Installer/LEGGIMI.md).
+
+### A mano, per sviluppare
 
 Richiede **Python 3.12** e **Git**. Dalla cartella del progetto:
 
@@ -118,6 +135,7 @@ app/
   templates/      pagine HTML (Jinja2)
   static/         CSS, JavaScript, font
 tests/            test automatici
+Installer/        costruzione del setup .exe per Windows
 PromptIA/         specifica e prototipo di riferimento
 .env              configurazione locale — NON va su Git
 .env.example      modello del .env, senza valori

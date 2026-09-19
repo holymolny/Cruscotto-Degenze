@@ -21,12 +21,12 @@
        class="{{ 'corrente' if sezione == 'pazienti' }}">Pazienti</a>
 
     {# La voce «Gestione utenti» compare solo a chi ha il permesso. Ma
-       nasconderla non basta: la route dietro sarà protetta da
-       @richiede_permesso, che risponde 403 a chiunque provi a raggiungerla
-       scrivendo l'indirizzo a mano.
-       Si attiva al passo 8, quando l'area utenti esisterà davvero. #}
+       nasconderla non basta: le route dietro portano @richiede_permesso, che
+       risponde 403 a chiunque provi a raggiungerle scrivendo l'indirizzo a
+       mano. #}
     {% if utente_puo(GESTIRE_UTENTI) %}
-      <a class="disattivata" title="Disponibile dal passo 8">Gestione utenti</a>
+      <a href="{{ url_for('utenti.elenco') }}"
+         class="{{ 'corrente' if sezione == 'utenti' }}">Gestione utenti</a>
     {% endif %}
 
     <div class="spazio"></div>
