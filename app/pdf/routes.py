@@ -11,6 +11,7 @@ from app.audit import registra_evento
 from app.estensioni import db
 from app.models import STATO_RICOVERATO, Paziente
 from app.pdf import generatore, pdf_bp
+from app.pdf import informativa as informativa_pdf
 from app.permessi import SCARICARE_PDF, richiede_permesso
 
 
@@ -55,4 +56,23 @@ def scheda(paziente_id: int):
     # Il PDF contiene dati del paziente: non deve restare nella cache del
     # browser di un PC condiviso.
     risposta.headers["Cache-Control"] = "no-store"
+    return risposta
+
+
+@pdf_bp.route("/informativa.pdf")
+def informativa():
+    """L'informativa sul programma, scaricabile dalla pagina di accesso.
+
+    Niente login_required: il documento non contiene dati di pazienti né di
+    utenti, e deve poterlo leggere anche chi non è ancora entrato (o non
+    riesce a entrare).
+    """
+    risposta = Response(
+        informativa_pdf.genera_informativa(current_app.config),
+        mimetype="application/pdf",
+    )
+    # attachment: un clic sul collegamento scarica subito il file.
+    risposta.headers["Content-Disposition"] = (
+        f'attachment; filename="{informativa_pdf.NOME_FILE}"'
+    )
     return risposta

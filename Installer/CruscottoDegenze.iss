@@ -78,6 +78,7 @@ Source: "..\README.md";        DestDir: "{app}"; Flags: ignoreversion
 
 ; --- Documentazione ---
 Source: "..\docs\Diario_Cruscotto_Degenze.pdf";          DestDir: "{app}\docs";     Flags: ignoreversion
+Source: "..\docs\Guida_Tecnica_Cruscotto_Degenze.pdf";   DestDir: "{app}\docs";     Flags: ignoreversion
 Source: "..\PromptIA\Documentazione_Cruscotto_Degenze.pdf"; DestDir: "{app}\PromptIA"; Flags: ignoreversion
 Source: "..\PromptIA\Prompt_Cruscotto_Degenze.pdf";         DestDir: "{app}\PromptIA"; Flags: ignoreversion
 
@@ -93,6 +94,7 @@ Source: "risorse\cruscotto.ico"; DestDir: "{app}\risorse"; Flags: ignoreversion
 Name: "{group}\{#NomeApp}"; Filename: "{app}\{#NomeEseguibile}"; WorkingDir: "{app}"; IconFilename: "{app}\risorse\cruscotto.ico"; Comment: "Accende il Cruscotto Degenze e apre la pagina di accesso"
 Name: "{group}\Cartella del programma"; Filename: "{app}"
 Name: "{group}\Diario di sviluppo"; Filename: "{app}\docs\Diario_Cruscotto_Degenze.pdf"
+Name: "{group}\Guida tecnica"; Filename: "{app}\docs\Guida_Tecnica_Cruscotto_Degenze.pdf"
 Name: "{autodesktop}\{#NomeApp}"; Filename: "{app}\{#NomeEseguibile}"; WorkingDir: "{app}"; IconFilename: "{app}\risorse\cruscotto.ico"; Tasks: collegamentodesktop
 
 [Run]

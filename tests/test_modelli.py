@@ -29,12 +29,12 @@ def test_i_tre_reparti_esistono(db):
     assert codici == ["AOUP", "S1", "S2"]
 
 
-def test_le_venti_voci_della_checklist_esistono(db):
+def test_le_voci_della_checklist_esistono(db):
     voci = db.session.query(VoceChecklist).order_by(VoceChecklist.ordine).all()
 
-    assert len(voci) == len(VOCI_CHECKLIST) == 20
+    assert len(voci) == len(VOCI_CHECKLIST) == 21
     assert voci[0].codice == "DIMISSIBILE"
-    assert voci[-1].codice == "EFFETTI"
+    assert voci[-1].codice == "PRIVACY"
 
 
 def test_gli_accenti_sopravvivono_al_salvataggio(db):

@@ -316,7 +316,7 @@ class NotaVersione(db.Model):
 
 
 class VoceChecklist(db.Model):
-    """Una delle 20 voci della checklist di dimissione.
+    """Una delle voci della checklist di dimissione.
 
     La chiave primaria è il codice, non un numero: le spunte dei pazienti si
     agganciano al codice, quindi il testo della voce si può correggere senza

@@ -1,4 +1,4 @@
-"""I dati che esistono da sempre: i tre reparti e le 20 voci della checklist.
+"""I dati che esistono da sempre: i tre reparti e le 21 voci della checklist.
 
 Stanno qui e non dentro la migrazione perché servono in due posti: la
 migrazione li inserisce nel database la prima volta, e i test li usano per
@@ -35,4 +35,5 @@ VOCI_CHECKLIST = [
     ("DOCUMENTAZIONE", "Documentazione consegnata"),
     ("FARMACI", "Farmaci consegnati/prescritti"),
     ("EFFETTI", "Effetti personali consegnati"),
+    ("PRIVACY", "Modulo Privacy Somministrato"),
 ]

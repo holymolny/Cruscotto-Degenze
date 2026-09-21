@@ -6,6 +6,7 @@ import pytest
 
 from app import audit
 from app.agenda import servizi as servizi_agenda
+from app.dati_fissi import VOCI_CHECKLIST
 from app.models import RUOLO_AMMIN, RUOLO_INFERMIERE, RUOLO_OSS, EventoAudit
 from app.pdf import generatore
 
@@ -117,8 +118,8 @@ def test_il_pdf_contiene_tutte_le_voci_della_checklist(db, paziente, amministrat
     testo = _testo_del_pdf(_genera(paziente, amministratore))
 
     assert "Checklist dimissione" in testo
-    assert "0/20" in testo
-    for voce in ("Paziente dimissibile", "Effetti personali consegnati"):
+    assert f"0/{len(VOCI_CHECKLIST)}" in testo
+    for voce in ("Paziente dimissibile", "Modulo Privacy Somministrato"):
         assert voce in testo
 
 
@@ -129,7 +130,7 @@ def test_il_contatore_della_checklist_riflette_le_spunte(db, paziente, amministr
 
     testo = _testo_del_pdf(_genera(paziente, amministratore))
 
-    assert "2/20" in testo
+    assert f"2/{len(VOCI_CHECKLIST)}" in testo
 
 
 def test_il_pdf_contiene_le_note_con_la_firma(db, paziente, infermiere, amministratore):
@@ -317,3 +318,31 @@ def test_il_pdf_di_un_paziente_dimesso_da_404(client, db, paziente, amministrato
     accedi("capo", "capo1234")
 
     assert client.get(f"/paziente/{paziente.id}/pdf").status_code == 404
+
+
+# --------------------------------------------------------------------------
+# L'informativa sul programma
+# --------------------------------------------------------------------------
+def test_l_informativa_si_scarica_senza_aver_fatto_l_accesso(client):
+    risposta = client.get("/informativa.pdf")
+
+    assert risposta.status_code == 200
+    assert risposta.mimetype == "application/pdf"
+    assert risposta.data.startswith(b"%PDF-")
+    assert "attachment" in risposta.headers["Content-Disposition"]
+    assert "Informativa_Cruscotto_Degenze.pdf" in risposta.headers["Content-Disposition"]
+
+
+def test_l_informativa_dice_come_e_stato_fatto_il_programma(client):
+    testo = _testo_del_pdf(client.get("/informativa.pdf").data)
+
+    assert "intelligenza artificiale" in testo
+    assert "rete locale" in testo
+    assert "amministrativa" in testo
+
+
+def test_la_pagina_di_accesso_collega_l_informativa(client):
+    pagina = client.get("/accedi").get_data(as_text=True)
+
+    assert "/informativa.pdf" in pagina
+    assert "Hai bisogno di aiuto?" in pagina

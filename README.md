@@ -85,6 +85,7 @@ Poi apri <http://127.0.0.1:5000> (oppure la porta 8000 con Waitress).
 pytest                        # esegue i test automatici
 pytest -v                     # come sopra, ma elenca ogni test
 python docs/genera_diario.py  # rigenera il PDF del diario di sviluppo
+python docs/genera_guida.py   # rigenera la guida tecnica (docs/Guida_Tecnica_...pdf)
 python docs/prepara_logo.py   # ricava i loghi web da PromptIA/LOGO CASA verticale.jpg
 
 flask db upgrade              # porta il database all'ultima versione

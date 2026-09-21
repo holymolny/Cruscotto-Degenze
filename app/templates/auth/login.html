@@ -4,7 +4,11 @@
 {% block titolo %}Accedi — Cruscotto Degenze{% endblock %}
 
 {% block corpo %}
-<section class="schermo-intero">
+<section class="schermo-intero schermo-login">
+  {# Qui dentro app.js fa cadere i simboli medici dello sfondo. Resta vuoto
+     nell'HTML: è decorazione, e chi usa un lettore di schermo non deve
+     sentirsela elencare. #}
+  <div class="pioggia" id="pioggia" aria-hidden="true"></div>
   <div class="card-login">
     {# width e height sono scritti nell'HTML di proposito: il browser sa quanto
        spazio riservare prima ancora di aver scaricato l'immagine, e la pagina
@@ -42,20 +46,37 @@
       </div>
 
       <div class="azioni-centrate">
-        {{ form.invia(class="btn") }}
+        {{ form.invia(class="btn btn-azzurro") }}
       </div>
     </form>
 
     <div class="nota-accesso">
+      <p><button type="button" class="collegamento" data-azione="apri-aiuto">Hai bisogno di aiuto?</button></p>
+      {# download: il browser salva il file invece di aprirlo. Lo stesso lo
+         chiede il server con Content-Disposition, questo è solo un rinforzo. #}
+      <p><a class="collegamento" href="{{ url_for('pdf.informativa') }}" download>Informativa sul programma (PDF)</a></p>
+    </div>
+  </div>
+</section>
+
+<div class="velo" id="velo-aiuto" data-finestra>
+  <div class="modale" style="max-width:430px">
+    <div class="modale-testa">
+      <h3>Hai bisogno di aiuto?</h3>
+    </div>
+    <div class="modale-corpo">
       <p>
-        Gli account vengono creati dall'amministratore (Micky) —
-        per eventuali problemi contattare <strong>interno 286</strong>.
+        Gli account vengono creati e gestiti dall'amministratore (Micky).
+        Per eventuali problemi contattare l'<strong>interno 286</strong>.
       </p>
       <p>
         Dopo {{ config.TENTATIVI_MASSIMI }} tentativi falliti l'accesso resta
         bloccato per {{ config.MINUTI_BLOCCO }} minuti.
       </p>
     </div>
+    <div class="modale-piede">
+      <button type="button" class="btn btn-azzurro" data-azione="chiudi">Chiudi</button>
+    </div>
   </div>
-</section>
+</div>
 {% endblock %}

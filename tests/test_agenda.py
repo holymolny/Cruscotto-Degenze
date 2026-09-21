@@ -6,6 +6,7 @@ import pytest
 
 from app import audit
 from app.agenda import servizi
+from app.dati_fissi import VOCI_CHECKLIST
 from app.formati import oggi_italia
 from app.models import (
     RUOLO_ADMIN,
@@ -388,7 +389,7 @@ def test_spunta_dalla_pagina(client, db, paziente, infermiere, accedi):
     )
 
     assert risposta.status_code == 200
-    assert risposta.get_json() == {"spuntate": 1, "totale": 20}
+    assert risposta.get_json() == {"spuntate": 1, "totale": len(VOCI_CHECKLIST)}
 
 
 def test_loss_non_puo_spuntare(client, db, paziente, crea_utente, accedi):
@@ -414,14 +415,12 @@ def test_lammin_vede_la_checklist_disabilitata(client, paziente, crea_utente, ac
     assert "non modificarla" in html
 
 
-def test_il_contatore_arriva_a_venti_su_venti(db, paziente):
-    from app.dati_fissi import VOCI_CHECKLIST
-
+def test_il_contatore_arriva_in_fondo(db, paziente):
     for codice, _ in VOCI_CHECKLIST:
         totale = servizi.imposta_spunta(paziente, codice, True)
     db.session.commit()
 
-    assert totale == 20
+    assert totale == len(VOCI_CHECKLIST)
 
 
 def test_le_spunte_restano_dopo_leliminazione_del_paziente(db, paziente, amministratore):

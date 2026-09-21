@@ -65,6 +65,11 @@
   var azioni = {
     "chiudi": chiudiTutte,
 
+    "apri-aiuto": function () {
+      // La finestra d'aiuto della pagina di accesso: solo testo, niente da preparare.
+      apri("velo-aiuto");
+    },
+
     "apri-nuovo": function (bottone) {
       var modulo = document.querySelector("#velo-nuovo form");
       modulo.querySelector('[name="reparto_id"]').value = bottone.dataset.reparto;
@@ -383,6 +388,65 @@
     contatore.classList.toggle("completa", spuntate === totale);
     barra.style.width = (totale ? (spuntate / totale) * 100 : 0) + "%";
   }
+
+  /* ------------------------------------------------------------------
+     PIOGGIA DI SIMBOLI (sfondo della pagina di accesso)
+     ------------------------------------------------------------------ */
+  // Disegni in un riquadro 24x24, nello stile delle icone a tratto.
+  var SIMBOLI = [
+    // Croce medica
+    '<path d="M9 3h6v6h6v6h-6v6H9v-6H3V9h6z"/>',
+    // Cuore
+    '<path d="M12 20s-7-4.4-9.2-8.6C1.2 8.2 3 4.5 6.6 4.5c2.1 0 3.4 1.2 5.4 3.3 2-2.1 3.3-3.3 5.4-3.3 3.6 0 5.4 3.7 3.8 6.9C19 15.6 12 20 12 20z"/>',
+    // Pillola
+    '<rect x="2.5" y="8" width="19" height="8" rx="4"/><path d="M12 8v8"/>',
+    // Battito cardiaco
+    '<path d="M2 12h5l2-5 4 10 2.5-5H22"/>',
+    // Goccia
+    '<path d="M12 3s6 6.6 6 11a6 6 0 0 1-12 0c0-4.4 6-11 6-11z"/>'
+  ];
+  // Bianco, giallo e azzurro del logo.
+  var COLORI_PIOGGIA = ["#FFFFFF", "#FBE116", "#00A3D4"];
+
+  function tra(minimo, massimo) {
+    return minimo + Math.random() * (massimo - minimo);
+  }
+
+  function preparaPioggia() {
+    var pioggia = document.getElementById("pioggia");
+    if (!pioggia) return;
+
+    // Meno simboli sugli schermi stretti, per non affollare.
+    var quanti = window.innerWidth < 700 ? 14 : 28;
+    for (var i = 0; i < quanti; i++) {
+      var simbolo = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      var lato = tra(18, 42);
+      simbolo.setAttribute("viewBox", "0 0 24 24");
+      simbolo.setAttribute("width", lato);
+      simbolo.setAttribute("height", lato);
+      simbolo.setAttribute("fill", "none");
+      simbolo.setAttribute("stroke", COLORI_PIOGGIA[i % COLORI_PIOGGIA.length]);
+      simbolo.setAttribute("stroke-width", "1.8");
+      simbolo.setAttribute("stroke-linecap", "round");
+      simbolo.setAttribute("stroke-linejoin", "round");
+      simbolo.innerHTML = SIMBOLI[Math.floor(Math.random() * SIMBOLI.length)];
+
+      // Gli stili impostati da JavaScript sono ammessi dalla
+      // Content-Security-Policy; quelli scritti nell'HTML no.
+      var durata = tra(14, 30);
+      simbolo.style.left = tra(0, 100) + "%";
+      simbolo.style.opacity = tra(0.55, 0.9).toFixed(2);
+      simbolo.style.animationDuration = durata + "s";
+      // Ritardo negativo: all'apertura i simboli sono già sparsi su tutto
+      // lo schermo, invece di partire tutti insieme dal bordo in alto.
+      simbolo.style.animationDelay = -tra(0, durata) + "s";
+      simbolo.style.setProperty("--deriva", tra(-60, 60) + "px");
+      simbolo.style.setProperty("--giro", tra(-240, 240) + "deg");
+      pioggia.appendChild(simbolo);
+    }
+  }
+
+  preparaPioggia();
 
   /* ------------------------------------------------------------------
      AVVISO TEMPORANEO
