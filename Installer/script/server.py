@@ -39,6 +39,14 @@ def main() -> None:
     print("   NON chiudere questa finestra mentre usi il programma:")
     print("   è qui dentro che gira. Per spegnerlo, chiudila o premi Ctrl+C.")
     print("  ============================================================")
+    print()
+    print(r"       /\_/\  ")
+    print(r"      ( o.o )      HolyMolny  x  CdcMisnav")
+    print(r"       > ^ <       ------------------------")
+    print(r"      /     \              ~ 2026 ~")
+    print(r"     (|     |)__")
+    print(r"      \_____/___)")
+    print()
     print(flush=True)
 
     # ident: il nome con cui il server si presenta nelle risposte HTTP. Quello
